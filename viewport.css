@@ -1,0 +1,21 @@
+.viewPort {
+    --vp-width: 1200px;
+    --vp-height: 800px;
+    background-color: transparent;
+    box-sizing: border-box;
+    margin: 0;
+    height: var(--vp-height);
+    width: var(--vp-width);
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%,-100%);
+}
+
+#gameView {
+    border: 5px solid limegreen;
+    position: relative;
+    box-sizing: border-box;
+    height: 100%;
+    width: 100%;
+}

@@ -1,0 +1,23 @@
+.tq_button {
+    background-color: transparent;
+    /* Green */
+    border: solid 2px limegreen;
+    color: limegreen;
+    padding: 10px ;
+    text-align: left;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    font-family: "Orator Std";
+    font-weight: bold;
+}
+
+.tq_button:hover {
+    background-color: green;
+}
+
+.tq_button:active {
+    background-color: lightgreen;
+    border: solid 2px green;
+    color: green;
+}
