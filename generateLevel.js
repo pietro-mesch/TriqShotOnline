@@ -1,9 +1,9 @@
-const vp = document.getElementById('viewPort');
+// const vp = document.getElementById('viewPort');
 const gv = document.getElementById('gameView');
-const VP_WIDTH = vp.width = window.innerWidth * 0.8;
-const VP_HEIGHT = vp.height = VP_WIDTH * 3 / 4;
-gv.width = VP_WIDTH;
-gv.height = VP_HEIGHT;
+// const VP_WIDTH = vp.width = window.innerWidth * 0.8;
+// const VP_HEIGHT = vp.height = VP_WIDTH * 3 / 4;
+// gv.width = VP_WIDTH;
+// gv.height = VP_HEIGHT;
 
 const ctx = gv.getContext('2d');
 let x = 0;
@@ -18,5 +18,3 @@ function generateLevel() {
     }
     requestAnimationFrame(generateLevel);
 }
-
-// generateLevel();
