@@ -1,11 +1,8 @@
-.viewPort {
-    --vp-width: 1000px;
-    --vp-height: 750px;
+#viewPort {
     background-color: transparent;
     box-sizing: border-box;
     margin: 0;
-    height: var(--vp-height);
-    width: var(--vp-width);
+    padding: 0;
     position: absolute;
     left: 50%;
     top: 100%;
@@ -18,4 +15,5 @@
     box-sizing: border-box;
     height: 100%;
     width: 100%;
+    margin: 0;
 }
