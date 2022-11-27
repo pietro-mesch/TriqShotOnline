@@ -18,6 +18,8 @@ const LEVEL_LAYER_ID = "planetLayer";
 const PLANET_COLOUR = "#32cd32";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
+const TRAJECTORY_COLOUR = "#db1616";
+
 
 class GameView {
     static htmlElement;
@@ -33,7 +35,7 @@ class GameView {
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
-        
+
         this.levelLayer.canvas.width = dim.width;
         this.levelLayer.canvas.height = dim.height;
         this.levelLayer.scale(dim.scale, dim.scale);
@@ -49,7 +51,19 @@ class GameView {
         this.levelLayer.drawCircle(p.x, p.y, p.radius);
     }
 
-    static drawLevel(planet){
+    static drawTrajectory(trajectory) {
+        
+        this.trajectoryLayer.lineWidth = TRAJECTORY_THICKNESS;
+        this.trajectoryLayer.strokeStyle = TRAJECTORY_COLOUR;
+        this.trajectoryLayer.lineCap = 'round';
+        
+        this.trajectoryLayer.beginPath();
+        this.trajectoryLayer.moveTo(trajectory.x1, trajectory.y1);
+        this.trajectoryLayer.lineTo(trajectory.x2, trajectory.y2);
+        this.trajectoryLayer.stroke();
+    }
+
+    static drawLevel(planet) {
         this.levelLayer.clearLayer();
         this.drawPlanet(planet);
     }
