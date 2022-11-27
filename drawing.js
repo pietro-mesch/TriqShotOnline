@@ -58,8 +58,6 @@ class GameView {
 
     static {
         this.htmlElement = document.getElementById('gameView');
-        // this.planetLayer = document.getElementById(PLANET_LAYER_ID).getContext('2d');
-        // this.trajectoryLayer = document.getElementById(TRAJECTORY_LAYER_ID).getContext('2d');
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, CONTROL_COLOUR);
@@ -83,25 +81,12 @@ class GameView {
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
-
         this.layers.forEach(l => l.setDimensions(gameViewDimensions));
-
-        // this.planetLayer.canvas.width = dim.width;
-        // this.planetLayer.canvas.height = dim.height;
-        // this.planetLayer.scale(dim.scale, dim.scale);
-
-        // this.trajectoryLayer.canvas.width = dim.width;
-        // this.trajectoryLayer.canvas.height = dim.height;
-        // this.trajectoryLayer.scale(dim.scale, dim.scale);
     }
 
-    static drawPlanet(p) {
-        this.planetLayer.drawPlanet(p);
-    }
+    static drawPlanet(p) {this.planetLayer.drawPlanet(p);}
 
-    static drawTrajectory(trajectory) {
-        this.trajectoryLayer.drawTrajectory(trajectory);
-    }
+    static drawTrajectory(trajectory) {this.trajectoryLayer.drawTrajectory(trajectory);}
 
     static drawLevel(planet) {
         this.planetLayer.clear();
