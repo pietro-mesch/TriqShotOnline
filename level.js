@@ -13,11 +13,6 @@ class Planet {
 
 let planet = null;
 
-function newGame(){
-    generateLevel();
-    drawCurrentLevel();
-}
-
 function generateLevel() {
     planet = new Planet(GV_WIDTH, GV_HEIGHT);
 }
