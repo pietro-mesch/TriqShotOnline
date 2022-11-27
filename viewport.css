@@ -21,6 +21,7 @@
 }
 
 .gameView-layer {
+    display: block;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
