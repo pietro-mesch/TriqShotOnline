@@ -17,12 +17,17 @@ const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
 const LEVEL_LAYER_ID = "planetLayer";
 const PLANET_COLOUR = "#32cd32";
 
+const TRAJECTORY_LAYER_ID = "trajectoryLayer";
+
 class GameView {
     static htmlElement;
     static levelLayer;
+    static trajectoryLayer;
+
     static {
         this.htmlElement = document.getElementById('gameView');
         this.levelLayer = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
+        this.trajectoryLayer = document.getElementById(TRAJECTORY_LAYER_ID).getContext('2d');
     };
 
     static setDimensions(gameViewDimensions) {
@@ -32,6 +37,10 @@ class GameView {
         this.levelLayer.canvas.width = dim.width;
         this.levelLayer.canvas.height = dim.height;
         this.levelLayer.scale(dim.scale, dim.scale);
+
+        this.trajectoryLayer.canvas.width = dim.width;
+        this.trajectoryLayer.canvas.height = dim.height;
+        this.trajectoryLayer.scale(dim.scale, dim.scale);
     }
 
     static drawPlanet(p) {
