@@ -9,9 +9,12 @@ function resizeComponents() {
 }
 
 function resizeGameView() {
-    const gv = document.getElementById('gameView');
-    const ctx = gv.getContext('2d');
+    gv = document.getElementById('gameView');
     dim = computeDimensions();
+    gv.width = dim.width;
+    gv.height = dim.height;
+    
+    ctx = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
     ctx.canvas.width = dim.width;
     ctx.canvas.height = dim.height;
     ctx.scale(dim.scale, dim.scale);
