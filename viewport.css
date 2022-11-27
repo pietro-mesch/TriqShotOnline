@@ -10,7 +10,7 @@
 }
 
 #gameView {
-    border: 5px solid limegreen;
+    border: none;
     position: absolute;
     box-sizing: border-box;
     margin: 0;

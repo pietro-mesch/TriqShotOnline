@@ -29,6 +29,11 @@ class gameViewLayer {
     }
 
     clear() { this.context2d.clearRect(0, 0, GV_WIDTH, GV_HEIGHT) };
+    drawFrame(){
+        this.context2d.strokeStyle = this.colour;
+        this.context2d.lineWidth = PLANET_THICKNESS;
+        this.context2d.strokeRect(0, 0, GV_WIDTH, GV_HEIGHT);
+    }
     drawCircle(x_centre, y_centre, radius) {
         this.context2d.beginPath();
         this.context2d.ellipse(x_centre, y_centre, radius, radius, 0, 0, 2 * Math.PI);
@@ -52,7 +57,7 @@ class gameViewLayer {
 
     drawFCI(x, y, a, v) {
         let r = FCI_SETTINGS.radius;
-        let rinf = 2*GV_WIDTH;
+        let rinf = 2 * GV_WIDTH;
         let rv = r * v;
         let rs = rv * 0.1;
         let p = Math.PI;
@@ -65,6 +70,7 @@ class gameViewLayer {
         this.context2d.lineCap = "round";
 
         this.context2d.lineWidth = 2;
+        this.context2d.setLineDash([]);
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
         this.context2d.lineTo(x + rv * cos, y - rv * sin);
@@ -77,7 +83,7 @@ class gameViewLayer {
         this.context2d.moveTo(x + rv * cos, y - rv * sin);
         this.context2d.lineTo(x + rv * cos + rs * Math.cos(a + aa), y - rv * sin - rs * Math.sin(a + aa));
         this.context2d.stroke();
-        
+
         this.context2d.lineWidth = 1;
         this.context2d.setLineDash([3, 7]);
         this.context2d.beginPath();
@@ -112,10 +118,15 @@ class GameView {
     static trajectoryLayer;
     static controlLayer;
 
+    static dimensions;
+
     static layers;
 
     static {
         this.htmlElement = document.getElementById('gameView');
+        this.htmlElement.addEventListener("mousedown",
+            function (e) {clickedInGameView(e); })
+
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, CONTROL_COLOUR);
@@ -137,21 +148,24 @@ class GameView {
     }
 
     static setDimensions(gameViewDimensions) {
+        this.dimensions = gameViewDimensions;
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
         this.layers.forEach(l => l.setDimensions(gameViewDimensions));
     }
 
-    static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
+    static drawPlanet(p) {this.planetLayer.drawPlanet(p); }
 
     static drawTrajectory(trajectory) { this.trajectoryLayer.drawTrajectory(trajectory); }
 
     static drawLevel(planet) {
         this.planetLayer.clear();
+        this.planetLayer.drawFrame();
         this.drawPlanet(planet);
     }
 
     static drawFCI(x, y, a, v) {
+        this.controlLayer.clear();
         this.controlLayer.drawFCI(x, y, a, v);
     }
 }
