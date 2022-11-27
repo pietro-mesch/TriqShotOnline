@@ -26,6 +26,13 @@ function mouseUpInGameView(mouseUpEvent) {
     }
 }
 
+function mouseWheelInGameView(mouseWheelEvent) {
+    if (fci != null) {
+        fci.adjustVelocity(mouseWheelEvent.deltaY,mouseWheelEvent.shiftKey,mouseWheelEvent.ctrlKey);
+        GameView.drawFCI(fci);
+    }
+}
+
 let fci = null;
 
 class FireControlInterface {
@@ -38,5 +45,8 @@ class FireControlInterface {
     }
     trackPoint(x, y) {
         this.a = Math.atan((this.y - y) / (x - this.x)) + (x >= this.x ? 0 : Math.PI);
+    }
+    adjustVelocity(delta, fast, slow){
+        this.v = Math.max(0.001, Math.min(1, this.v + Math.sign(-delta) * 0.01 * (fast ? 10 : 1) * (slow ? 0.05 : 1)));
     }
 }

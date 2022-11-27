@@ -89,6 +89,7 @@ class gameViewLayer {
         this.context2d.stroke();
 
         this.context2d.lineWidth = 1;
+        this.drawCircle(x, y, rv);
         this.drawCircle(x, y, r);
         this.context2d.setLineDash([3, 7]);
         this.context2d.beginPath();
@@ -131,6 +132,11 @@ class GameView {
         //this.htmlElement.addEventListener("dragstart",function (e) { dragStartedInGameView(e); });
         this.htmlElement.addEventListener("mousemove", function (e) { mouseMoveInGameView(e); });
         this.htmlElement.addEventListener("mouseup", function (e) { mouseUpInGameView(e); });
+        this.htmlElement.addEventListener("wheel", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            mouseWheelInGameView(e);
+        }, { passive: false });
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
