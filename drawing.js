@@ -29,7 +29,7 @@ class gameViewLayer {
     }
 
     clear() { this.context2d.clearRect(0, 0, GV_WIDTH, GV_HEIGHT) };
-    drawFrame(){
+    drawFrame() {
         this.context2d.strokeStyle = this.colour;
         this.context2d.lineWidth = PLANET_THICKNESS;
         this.context2d.strokeRect(0, 0, GV_WIDTH, GV_HEIGHT);
@@ -55,7 +55,11 @@ class gameViewLayer {
         this.context2d.stroke();
     }
 
-    drawFCI(x, y, a, v) {
+    drawFCI(fci) {
+        this.drawBaseFCI(fci.x, fci.y, fci.a, fci.v)
+    }
+
+    drawBaseFCI(x, y, a, v) {
         let r = FCI_SETTINGS.radius;
         let rinf = 2 * GV_WIDTH;
         let rv = r * v;
@@ -125,7 +129,7 @@ class GameView {
     static {
         this.htmlElement = document.getElementById('gameView');
         this.htmlElement.addEventListener("mousedown",
-            function (e) {clickedInGameView(e); })
+            function (e) { clickedInGameView(e); })
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
@@ -154,7 +158,7 @@ class GameView {
         this.layers.forEach(l => l.setDimensions(gameViewDimensions));
     }
 
-    static drawPlanet(p) {this.planetLayer.drawPlanet(p); }
+    static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
     static drawTrajectory(trajectory) { this.trajectoryLayer.drawTrajectory(trajectory); }
 
@@ -164,9 +168,9 @@ class GameView {
         this.drawPlanet(planet);
     }
 
-    static drawFCI(x, y, a, v) {
+    static drawFCI(fci) {
         this.controlLayer.clear();
-        this.controlLayer.drawFCI(x, y, a, v);
+        this.controlLayer.drawFCI(fci);
     }
 }
 
