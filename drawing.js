@@ -1,68 +1,94 @@
-CanvasRenderingContext2D.prototype.clearLayer =
-    function () {
-        this.clearRect(0, 0, GV_WIDTH, GV_HEIGHT);
-    }
-
-CanvasRenderingContext2D.prototype.drawCircle =
-    function (x_centre, y_centre, radius) {
-        this.beginPath();
-        this.ellipse(x_centre, y_centre, radius, radius, 0, 0, 2 * Math.PI);
-        this.stroke();
-    }
-
 const GV_ASPECT = 9 / 5;
 const GV_WIDTH = 1500;
 const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
 
-const LEVEL_LAYER_ID = "planetLayer";
+const PLANET_LAYER_ID = "planetLayer";
 const PLANET_COLOUR = "#32cd32";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
 const TRAJECTORY_COLOUR = "#db1616";
 
+const CONTROL_LAYER_ID = "controlLayer";
+const CONTROL_COLOUR = "#097ce8";
+
+class gameViewLayer {
+    constructor(id, colour, context2d) {
+        this.id = id;
+        this.colour = colour;
+        this.context2d = context2d;
+    }
+
+    setDimensions(gameViewDimensions) {
+        this.context2d.canvas.width = gameViewDimensions.width;
+        this.context2d.canvas.height = gameViewDimensions.height;
+        this.context2d.scale(gameViewDimensions.scale, gameViewDimensions.scale);
+    }
+
+    clear() { this.context2d.clearRect(0, 0, GV_WIDTH, GV_HEIGHT) };
+    drawCircle(x_centre, y_centre, radius) {
+        this.context2d.beginPath();
+        this.context2d.ellipse(x_centre, y_centre, radius, radius, 0, 0, 2 * Math.PI);
+        this.context2d.stroke();
+    }
+    drawPlanet(p){
+        this.context2d.strokeStyle = this.colour;
+        this.context2d.lineWidth = PLANET_THICKNESS;
+        this.drawCircle(p.x, p.y, p.radius);
+    }
+
+    drawTrajectory(t){
+        this.context2d.strokeStyle = this.colour;
+        this.context2d.lineWidth = TRAJECTORY_THICKNESS;
+        this.context2d.lineCap = 'round';
+        this.context2d.beginPath();
+        this.context2d.moveTo(t.x1, t.y1);
+        this.context2d.lineTo(t.x2, t.y2);
+        this.context2d.stroke();
+    }
+}
+
 
 class GameView {
     static htmlElement;
-    static levelLayer;
+    static planetLayer;
     static trajectoryLayer;
-    static controlsLayer;
+    static controlLayer;
 
     static layers;
 
     static {
         this.htmlElement = document.getElementById('gameView');
-        this.levelLayer = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
-        this.trajectoryLayer = document.getElementById(TRAJECTORY_LAYER_ID).getContext('2d');
-        this.controlsLayer = this.#createLayer();
+        // this.planetLayer = document.getElementById(PLANET_LAYER_ID).getContext('2d');
+        // this.trajectoryLayer = document.getElementById(TRAJECTORY_LAYER_ID).getContext('2d');
+        this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
+        this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
+        this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, CONTROL_COLOUR);
 
         this.layers = [
-            this.levelLayer,
+            this.planetLayer,
             this.trajectoryLayer,
-            this.controlsLayer
+            this.controlLayer
         ];
     };
 
-    static #createLayer() {
+    static #createLayer(id, colour) {
         let canvas = document.createElement('canvas');
         canvas.className = "gameView-layer";
-        canvas.id = "controlsLayer";
+        canvas.id = id;
         this.htmlElement.appendChild(canvas);
-        return canvas.getContext('2d');
+
+        return new gameViewLayer(id, colour, canvas.getContext('2d'));
     }
 
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
 
-        this.layers.forEach(l => {
-            l.canvas.width = dim.width;
-            l.canvas.height = dim.height;
-            l.scale(dim.scale, dim.scale);
-        });
-        
-        // this.levelLayer.canvas.width = dim.width;
-        // this.levelLayer.canvas.height = dim.height;
-        // this.levelLayer.scale(dim.scale, dim.scale);
+        this.layers.forEach(l => l.setDimensions(gameViewDimensions));
+
+        // this.planetLayer.canvas.width = dim.width;
+        // this.planetLayer.canvas.height = dim.height;
+        // this.planetLayer.scale(dim.scale, dim.scale);
 
         // this.trajectoryLayer.canvas.width = dim.width;
         // this.trajectoryLayer.canvas.height = dim.height;
@@ -70,25 +96,15 @@ class GameView {
     }
 
     static drawPlanet(p) {
-        this.levelLayer.strokeStyle = PLANET_COLOUR;
-        this.levelLayer.lineWidth = PLANET_THICKNESS;
-        this.levelLayer.drawCircle(p.x, p.y, p.radius);
+        this.planetLayer.drawPlanet(p);
     }
 
     static drawTrajectory(trajectory) {
-
-        this.trajectoryLayer.lineWidth = TRAJECTORY_THICKNESS;
-        this.trajectoryLayer.strokeStyle = TRAJECTORY_COLOUR;
-        this.trajectoryLayer.lineCap = 'round';
-
-        this.trajectoryLayer.beginPath();
-        this.trajectoryLayer.moveTo(trajectory.x1, trajectory.y1);
-        this.trajectoryLayer.lineTo(trajectory.x2, trajectory.y2);
-        this.trajectoryLayer.stroke();
+        this.trajectoryLayer.drawTrajectory(trajectory);
     }
 
     static drawLevel(planet) {
-        this.levelLayer.clearLayer();
+        this.planetLayer.clear();
         this.drawPlanet(planet);
     }
 }
