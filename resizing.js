@@ -9,10 +9,9 @@ function resizeComponents() {
 }
 
 function resizeGameView() {
-    gv = document.getElementById('gameView');
+    // gv = document.getElementById('gameView');
     dim = computeDimensions();
-    gv.width = dim.width;
-    gv.height = dim.height;
+    GameView.setDimensions(dim);
     
     ctx = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
     ctx.canvas.width = dim.width;
@@ -35,13 +34,5 @@ function computeDimensions() {
         w = h * GV_ASPECT;
         s = y_ratio;
     }
-    return new gameViewDimensions(w, h, s);
-}
-
-class gameViewDimensions {
-    constructor(width, heigth, scale) {
-        this.width = width;
-        this.height = heigth;
-        this.scale = scale;
-    }
+    return new GameViewDimensions(w, h, s);
 }
