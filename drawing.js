@@ -50,8 +50,10 @@ class gameViewLayer {
         this.context2d.lineWidth = TRAJECTORY_THICKNESS;
         this.context2d.lineCap = 'round';
         this.context2d.beginPath();
-        this.context2d.moveTo(t.x1, t.y1);
-        this.context2d.lineTo(t.x2, t.y2);
+        this.context2d.moveTo(t.points[0].x,t.points[0].y);
+        for (let i = 1; i < t.points.length; i++) {
+            this.context2d.lineTo(t.points[i].x, t.points[i].y);
+        }
         this.context2d.stroke();
     }
 

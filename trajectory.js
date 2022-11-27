@@ -1,14 +1,16 @@
 const TRAJECTORY_THICKNESS = 3;
 
-class Trajectory{
-    constructor(fieldWidth, fieldHeigth){
-        this.x1 = Math.floor(Math.random() * (fieldWidth + 1));
-        this.y1 = Math.floor(Math.random() * (fieldHeigth + 1));
-        this.x2 = Math.floor(Math.random() * (fieldWidth + 1));
-        this.y2 = Math.floor(Math.random() * (fieldHeigth + 1));
-    }
+class Trajectory {
+    static MAX_LENGTH = 1000;
+    points = [];
+    constructor(points) { this.points = points; }
 }
 
-function fire(){
-    GameView.drawTrajectory(new Trajectory(GV_WIDTH, GV_HEIGHT))
+function fire() {
+    if (fci != null) {
+        let points = [];
+        points.push({ x: fci.x, y: fci.y });
+        points.push({ x: fci.x + 1500 * Math.cos(fci.a), y: fci.y - 1500 * Math.sin(fci.a) });
+        GameView.drawTrajectory(new Trajectory(points));
+    }
 }
