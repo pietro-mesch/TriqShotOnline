@@ -89,14 +89,13 @@ class gameViewLayer {
         this.context2d.stroke();
 
         this.context2d.lineWidth = 1;
+        this.drawCircle(x, y, r);
         this.context2d.setLineDash([3, 7]);
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
         this.context2d.lineTo(x + rinf * cos, y - rinf * sin);
         this.context2d.stroke();
 
-
-        this.drawCircle(x, y, r);
         this.context2d.setLineDash([15, 15]);
         this.drawCircle(x, y, r / 2);
         this.context2d.setLineDash([5, 10]);
@@ -128,8 +127,10 @@ class GameView {
 
     static {
         this.htmlElement = document.getElementById('gameView');
-        this.htmlElement.addEventListener("mousedown",
-            function (e) { clickedInGameView(e); })
+        this.htmlElement.addEventListener("mousedown", function (e) { mouseDownInGameView(e); });
+        //this.htmlElement.addEventListener("dragstart",function (e) { dragStartedInGameView(e); });
+        this.htmlElement.addEventListener("mousemove", function (e) { mouseMoveInGameView(e); });
+        this.htmlElement.addEventListener("mouseup", function (e) { mouseUpInGameView(e); });
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
@@ -155,7 +156,7 @@ class GameView {
         let rect = this.htmlElement.getBoundingClientRect();
         let x = (window_x - rect.left) / GameView.dimensions.scale;
         let y = (window_y - rect.top) / GameView.dimensions.scale;
-        return {x:x, y:y};
+        return { x: x, y: y };
     }
 
     static setDimensions(gameViewDimensions) {
