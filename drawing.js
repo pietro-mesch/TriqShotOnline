@@ -63,7 +63,7 @@ class gameViewLayer {
         let r = FCI_SETTINGS.radius;
         let rinf = 2 * GV_WIDTH;
         let rv = r * v;
-        let rs = rv * 0.1;
+        let rs = r * 0.1;
         let p = Math.PI;
         let as = p / 4;
         let aa = p - as;
@@ -149,6 +149,13 @@ class GameView {
         this.htmlElement.appendChild(canvas);
 
         return new gameViewLayer(id, colour, canvas.getContext('2d'));
+    }
+
+    static getScaledCoordinates(window_x, window_y) {
+        let rect = this.htmlElement.getBoundingClientRect();
+        let x = (window_x - rect.left) / GameView.dimensions.scale;
+        let y = (window_y - rect.top) / GameView.dimensions.scale;
+        return {x:x, y:y};
     }
 
     static setDimensions(gameViewDimensions) {
