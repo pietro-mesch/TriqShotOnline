@@ -25,24 +25,48 @@ class GameView {
     static htmlElement;
     static levelLayer;
     static trajectoryLayer;
+    static controlsLayer;
+
+    static layers;
 
     static {
         this.htmlElement = document.getElementById('gameView');
         this.levelLayer = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
         this.trajectoryLayer = document.getElementById(TRAJECTORY_LAYER_ID).getContext('2d');
+        this.controlsLayer = this.#createLayer();
+
+        this.layers = [
+            this.levelLayer,
+            this.trajectoryLayer,
+            this.controlsLayer
+        ];
     };
+
+    static #createLayer() {
+        let canvas = document.createElement('canvas');
+        canvas.className = "gameView-layer";
+        canvas.id = "controlsLayer";
+        this.htmlElement.appendChild(canvas);
+        return canvas.getContext('2d');
+    }
 
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
 
-        this.levelLayer.canvas.width = dim.width;
-        this.levelLayer.canvas.height = dim.height;
-        this.levelLayer.scale(dim.scale, dim.scale);
+        this.layers.forEach(l => {
+            l.canvas.width = dim.width;
+            l.canvas.height = dim.height;
+            l.scale(dim.scale, dim.scale);
+        });
+        
+        // this.levelLayer.canvas.width = dim.width;
+        // this.levelLayer.canvas.height = dim.height;
+        // this.levelLayer.scale(dim.scale, dim.scale);
 
-        this.trajectoryLayer.canvas.width = dim.width;
-        this.trajectoryLayer.canvas.height = dim.height;
-        this.trajectoryLayer.scale(dim.scale, dim.scale);
+        // this.trajectoryLayer.canvas.width = dim.width;
+        // this.trajectoryLayer.canvas.height = dim.height;
+        // this.trajectoryLayer.scale(dim.scale, dim.scale);
     }
 
     static drawPlanet(p) {
@@ -52,11 +76,11 @@ class GameView {
     }
 
     static drawTrajectory(trajectory) {
-        
+
         this.trajectoryLayer.lineWidth = TRAJECTORY_THICKNESS;
         this.trajectoryLayer.strokeStyle = TRAJECTORY_COLOUR;
         this.trajectoryLayer.lineCap = 'round';
-        
+
         this.trajectoryLayer.beginPath();
         this.trajectoryLayer.moveTo(trajectory.x1, trajectory.y1);
         this.trajectoryLayer.lineTo(trajectory.x2, trajectory.y2);
