@@ -19,3 +19,19 @@
     top: 100%;
     transform: translate(-50%,-100%);
 }
+
+.gameView-layer {
+    display: block;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+#planetLayer {
+    background-color: transparent;
+}
+
+#trajectoryLayer {
+    background-color: transparent;
+    position: absolute;
+}

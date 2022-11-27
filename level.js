@@ -1,8 +1,3 @@
-const gv = document.getElementById('gameView');
-
-const ctx = gv.getContext('2d');
-
-const PLANET_COLOUR = "#32cd32";
 const PLANET_THICKNESS = 3;
 const PLANET_MIN_RADIUS = 25;
 const PLANET_MAX_RADIUS = 150;
@@ -18,24 +13,10 @@ class Planet {
 
 let planet = null;
 
-function newGame(){
-    generateLevel();
-    drawCurrentLevel();
-}
-
 function generateLevel() {
     planet = new Planet(GV_WIDTH, GV_HEIGHT);
 }
 
 function drawCurrentLevel(){
-    ctx.clearRect(0, 0, GV_WIDTH, GV_HEIGHT);
-    if(planet!=null){drawPlanet(planet)};
-}
-
-function drawPlanet(p) {
-    ctx.strokeStyle = PLANET_COLOUR;
-    ctx.lineWidth = PLANET_THICKNESS;
-    ctx.beginPath();
-    ctx.ellipse(p.x, p.y, p.radius, p.radius, 0, 0, 2 * Math.PI);
-    ctx.stroke();
+    if(planet!=null){GameView.drawLevel(planet)};
 }

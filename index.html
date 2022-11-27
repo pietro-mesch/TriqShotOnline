@@ -10,14 +10,20 @@
 <body onload="resizeComponents()" onresize="resizeComponents()">
     <div>
         <button class="tq_button" onclick="newGame()"> New Game </button>
+        <button class="tq_button" onclick="fire()">Fire!</button>
     </div>
-    <!-- <div id="viewPort" onresize="setDimensions()">
-    </div> -->
-    <canvas id="gameView"></canvas>
+
+    <div id="gameView">
+        <canvas class="gameView-layer" id="trajectoryLayer"></canvas>
+        <canvas class="gameView-layer" id="planetLayer"></canvas>
+    </div>
+
         
     <script src="game.js"></script>
     <script src="resizing.js"></script>
+    <script src="drawing.js"></script>
     <script src="level.js"></script>
+    <script src="trajectory.js"></script>
 </body>
 
 </html>

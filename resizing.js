@@ -1,7 +1,3 @@
-const GV_ASPECT = 9 / 5;
-const GV_WIDTH = 1500;
-const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
-
 const TOOLBAR_HEIGHT = 100;
 
 function resizeComponents() {
@@ -9,12 +5,8 @@ function resizeComponents() {
 }
 
 function resizeGameView() {
-    const gv = document.getElementById('gameView');
-    const ctx = gv.getContext('2d');
     dim = computeDimensions();
-    ctx.canvas.width = dim.width;
-    ctx.canvas.height = dim.height;
-    ctx.scale(dim.scale, dim.scale);
+    GameView.setDimensions(dim);
     drawCurrentLevel();
 }
 
@@ -32,13 +24,5 @@ function computeDimensions() {
         w = h * GV_ASPECT;
         s = y_ratio;
     }
-    return new gameViewDimensions(w, h, s);
-}
-
-class gameViewDimensions {
-    constructor(width, heigth, scale) {
-        this.width = width;
-        this.height = heigth;
-        this.scale = scale;
-    }
+    return new GameViewDimensions(w, h, s);
 }
