@@ -11,9 +11,11 @@
 
 #gameView {
     border: 5px solid limegreen;
-    position: relative;
+    position: absolute;
     box-sizing: border-box;
-    height: 100%;
-    width: 100%;
     margin: 0;
+    padding: 0;
+    left: 50%;
+    top: 100%;
+    transform: translate(-50%,-100%);
 }
