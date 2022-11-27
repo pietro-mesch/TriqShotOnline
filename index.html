@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="UTF-8" />
-	<title>TriqShotOnline</title>
-    <link rel="stylesheet" href="style.css"/>         
+    <meta charset="UTF-8" />
+    <title>TriqShotOnline</title>
+    <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-	<div>
-        <button class="tq_button"> New Game </button>
-    </div>   
-<div class="viewPort" >
+
+<body onload="setDimensions()" onresize="setDimensions()">
+    <div>
+        <button class="tq_button" onclick="generateLevel()"> New Game </button>
+    </div>
+    <!-- <div id="viewPort" onresize="setDimensions()">
+    </div> -->
     <canvas id="gameView"></canvas>
-</div>
-
-<script src="game.js"></script>
-
+        
+    <script src="game.js"></script>
+    <script src="setDimensions.js"></script>
+    <script src="generateLevel.js"></script>
 </body>
+
 </html>
