@@ -129,9 +129,9 @@ class GameView {
     static {
         this.htmlElement = document.getElementById('gameView');
         this.htmlElement.addEventListener("mousedown", function (e) { mouseDownInGameView(e); });
-        //this.htmlElement.addEventListener("dragstart",function (e) { dragStartedInGameView(e); });
         this.htmlElement.addEventListener("mousemove", function (e) { mouseMoveInGameView(e); });
         this.htmlElement.addEventListener("mouseup", function (e) { mouseUpInGameView(e); });
+        this.htmlElement.addEventListener("mouseleave", function (e) { mouseLeftGameView(e); });
         this.htmlElement.addEventListener("wheel", function (e) {
             e.preventDefault();
             e.stopPropagation();
@@ -156,6 +156,13 @@ class GameView {
         this.htmlElement.appendChild(canvas);
 
         return new gameViewLayer(id, colour, canvas.getContext('2d'));
+    }
+
+    static getRandomCoordinates() {
+        return {
+            x: Math.floor(Math.random() * (GV_WIDTH + 1)),
+            y: Math.floor(Math.random() * (GV_HEIGHT + 1))
+        };
     }
 
     static getScaledCoordinates(window_x, window_y) {

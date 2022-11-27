@@ -1,12 +1,16 @@
-function drawFCI() {
-    GameView.drawFCI(400, 400, 3, 0.8);
+function switchFireControl() {
+    let position = GameView.getRandomCoordinates();
+    fci = new FireControlInterface(position.x, position.y);
+    GameView.drawFCI(fci);
 }
 
 function mouseDownInGameView(mouseDownEvent) {
-    let scaled = GameView.getScaledCoordinates(mouseDownEvent.clientX, mouseDownEvent.clientY);
-    fci = new FireControlInterface(scaled.x, scaled.y);
-    fci.trackingMouse = true;
-    GameView.drawFCI(fci);
+    if (fci != null) {
+        let scaled = GameView.getScaledCoordinates(mouseDownEvent.clientX, mouseDownEvent.clientY);
+        fci.trackPoint(scaled.x, scaled.y);
+        fci.trackingMouse = true;
+        GameView.drawFCI(fci);
+    }
 }
 
 function mouseMoveInGameView(mouseMoveEvent) {
@@ -26,9 +30,16 @@ function mouseUpInGameView(mouseUpEvent) {
     }
 }
 
+function mouseLeftGameView(mouseLeaveEvent) {
+    if (fci != null && fci.trackingMouse) {
+        fci.trackingMouse = false;
+        GameView.drawFCI(fci);
+    }
+}
+
 function mouseWheelInGameView(mouseWheelEvent) {
     if (fci != null) {
-        fci.adjustVelocity(mouseWheelEvent.deltaY,mouseWheelEvent.shiftKey,mouseWheelEvent.ctrlKey);
+        fci.adjustVelocity(mouseWheelEvent.deltaY, mouseWheelEvent.shiftKey, mouseWheelEvent.ctrlKey);
         GameView.drawFCI(fci);
     }
 }
@@ -46,7 +57,7 @@ class FireControlInterface {
     trackPoint(x, y) {
         this.a = Math.atan((this.y - y) / (x - this.x)) + (x >= this.x ? 0 : Math.PI);
     }
-    adjustVelocity(delta, fast, slow){
+    adjustVelocity(delta, fast, slow) {
         this.v = Math.max(0.001, Math.min(1, this.v + Math.sign(-delta) * 0.01 * (fast ? 10 : 1) * (slow ? 0.05 : 1)));
     }
 }
