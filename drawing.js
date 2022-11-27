@@ -28,6 +28,10 @@ class GameView {
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
+        
+        this.levelLayer.canvas.width = dim.width;
+        this.levelLayer.canvas.height = dim.height;
+        this.levelLayer.scale(dim.scale, dim.scale);
     }
 
     static drawPlanet(p) {

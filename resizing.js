@@ -7,11 +7,6 @@ function resizeComponents() {
 function resizeGameView() {
     dim = computeDimensions();
     GameView.setDimensions(dim);
-    
-    ctx = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
-    ctx.canvas.width = dim.width;
-    ctx.canvas.height = dim.height;
-    ctx.scale(dim.scale, dim.scale);
     drawCurrentLevel();
 }
 
