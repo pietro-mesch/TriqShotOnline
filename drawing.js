@@ -10,15 +10,35 @@ CanvasRenderingContext2D.prototype.drawCircle =
         this.stroke();
     }
 
+const GV_ASPECT = 9 / 5;
+const GV_WIDTH = 1500;
+const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
+
+const LEVEL_LAYER_ID = "planetLayer";
+const PLANET_COLOUR = "#32cd32";
+
 class GameView {
     static htmlElement;
+    static levelLayer;
     static {
         this.htmlElement = document.getElementById('gameView');
+        this.levelLayer = document.getElementById(LEVEL_LAYER_ID).getContext('2d');
     };
 
     static setDimensions(gameViewDimensions) {
         this.htmlElement.width = gameViewDimensions.width;
         this.htmlElement.height = gameViewDimensions.height;
+    }
+
+    static drawPlanet(p) {
+        this.levelLayer.strokeStyle = PLANET_COLOUR;
+        this.levelLayer.lineWidth = PLANET_THICKNESS;
+        this.levelLayer.drawCircle(p.x, p.y, p.radius);
+    }
+
+    static drawLevel(planet){
+        this.levelLayer.clearLayer();
+        this.drawPlanet(planet);
     }
 }
 

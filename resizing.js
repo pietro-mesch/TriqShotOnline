@@ -1,7 +1,3 @@
-const GV_ASPECT = 9 / 5;
-const GV_WIDTH = 1500;
-const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
-
 const TOOLBAR_HEIGHT = 100;
 
 function resizeComponents() {
@@ -9,7 +5,6 @@ function resizeComponents() {
 }
 
 function resizeGameView() {
-    // gv = document.getElementById('gameView');
     dim = computeDimensions();
     GameView.setDimensions(dim);
     

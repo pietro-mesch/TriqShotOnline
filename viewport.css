@@ -19,3 +19,9 @@
     top: 100%;
     transform: translate(-50%,-100%);
 }
+
+.gameView-layer {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
