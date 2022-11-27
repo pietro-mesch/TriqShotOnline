@@ -2,13 +2,6 @@ const gv = document.getElementById('gameView');
 
 const ctx = gv.getContext('2d');
 
-// const GV_ASPECT = 9 / 5;
-// const GV_WIDTH = 1500;
-// const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
-// ctx.canvas.width = window.innerWidth * 0.8;
-// ctx.canvas.height = ctx.canvas.width / GV_ASPECT;
-// ctx.scale(ctx.canvas.width / GV_WIDTH, gv.height / GV_HEIGHT);
-
 const PLANET_COLOUR = "#32cd32";
 const PLANET_THICKNESS = 3;
 const PLANET_MIN_RADIUS = 25;
@@ -23,14 +16,20 @@ class Planet {
     }
 }
 
+let planet = null;
+
+function newGame(){
+    generateLevel();
+    drawCurrentLevel();
+}
 
 function generateLevel() {
+    planet = new Planet(GV_WIDTH, GV_HEIGHT);
+}
+
+function drawCurrentLevel(){
     ctx.clearRect(0, 0, GV_WIDTH, GV_HEIGHT);
-
-    p = new Planet(GV_WIDTH, GV_HEIGHT);
-    drawPlanet(p);
-
-    requestAnimationFrame();
+    if(planet!=null){drawPlanet(planet)};
 }
 
 function drawPlanet(p) {

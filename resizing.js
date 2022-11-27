@@ -4,16 +4,18 @@ const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
 
 const TOOLBAR_HEIGHT = 100;
 
-function setDimensions() {
+function resizeComponents() {
+    resizeGameView();
+}
+
+function resizeGameView() {
     const gv = document.getElementById('gameView');
     const ctx = gv.getContext('2d');
     dim = computeDimensions();
     ctx.canvas.width = dim.width;
     ctx.canvas.height = dim.height;
     ctx.scale(dim.scale, dim.scale);
-    // ctx.canvas.width = window.innerWidth * 0.8;
-    // ctx.canvas.height = ctx.canvas.width / GV_ASPECT;
-    // ctx.scale(ctx.canvas.width / GV_WIDTH, gv.height / GV_HEIGHT);
+    drawCurrentLevel();
 }
 
 function computeDimensions() {
