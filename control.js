@@ -1,8 +1,4 @@
-document.addEventListener("keydown", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    keyDown(e);
-}, { passive: false });
+document.addEventListener("keydown", function (e) {e.preventDefault();e.stopPropagation();keyDown(e);}, { passive: false });
 
 function switchFireControl() {
     let position = GameView.getRandomCoordinates();
@@ -103,6 +99,8 @@ function keyDown(keyDownEvent) {
 let fci = null;
 
 class FireControlInterface {
+    weapon_v = 1000;
+    
     constructor(x, y) {
         this.x = x;
         this.y = y;
@@ -110,6 +108,14 @@ class FireControlInterface {
         this.v = Math.random();
         this.trackingMouse = false;
     }
+
+    getFiringVector(){return new TrajectoryPoint(
+        this.x,
+        this.y,
+        this.a,
+        this.v * this.weapon_v,
+        0)};
+
     trackPoint(x, y) {
         this.a = Math.atan((this.y - y) / (x - this.x)) + (x >= this.x ? 0 : Math.PI);
     }
