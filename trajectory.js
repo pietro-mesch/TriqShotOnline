@@ -3,16 +3,21 @@ const TRAJECTORY_THICKNESS = 3;
 class Trajectory {
     static MAX_LENGTH = 1000;
     points = [];
-    constructor(points) { this.points = points; }
-    static fromShot(fromPoint, planets) {
+    constructor(points) { if (points != null){this.points = points;} }
+    
+    static fromShot(fromPoint, weaponClass, planets) {
         let dt = 1;
-        let weapon_tmax = 1;
-        let points = [fromPoint];
-        while (points.at(-1).t < weapon_tmax) {
-            let nextPoint = this.getNextPoint(points.at(-1), planets, dt);
-            points.push(nextPoint);
+        
+        let t = new Trajectory();
+        let p = fromPoint;
+        p.v *= Weapon(weaponClass).v;
+        t.points.push(p);
+
+        while (t.points.at(-1).t < Weapon(weaponClass).projectile_life) {
+            let nextPoint = this.getNextPoint(t.points.at(-1), planets, dt);
+            t.points.push(nextPoint);
         }
-        return new Trajectory(points);
+        return t;
     }
     static getNextPoint(p, planets, dt) {
         let dx = p.v * dt * Math.cos(p.a);
@@ -40,7 +45,7 @@ let lastTrajectory = null;
 
 function fire() {
     if (fci != null) {
-        lastTrajectory = Trajectory.fromShot(fci.getFiringVector());
+        lastTrajectory = Trajectory.fromShot(fci.getFiringVector(),fci.weapon);
         GameView.drawTrajectory(lastTrajectory);
     }
 }

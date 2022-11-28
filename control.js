@@ -99,21 +99,20 @@ function keyDown(keyDownEvent) {
 let fci = null;
 
 class FireControlInterface {
-    weapon_v = 1000;
-    
     constructor(x, y) {
         this.x = x;
         this.y = y;
         this.a = Math.random() * 2 * Math.PI;
         this.v = Math.random();
         this.trackingMouse = false;
+        this.weapon = "standard"
     }
 
     getFiringVector(){return new TrajectoryPoint(
         this.x,
         this.y,
         this.a,
-        this.v * this.weapon_v,
+        this.v,
         0)};
 
     trackPoint(x, y) {
