@@ -8,6 +8,8 @@ function resizeGameView() {
     dim = computeDimensions();
     GameView.setDimensions(dim);
     drawCurrentLevel();
+    if (lastTrajectory != null){GameView.drawTrajectory(lastTrajectory)};
+    GameView.drawFCI(fci);
 }
 
 function computeDimensions() {

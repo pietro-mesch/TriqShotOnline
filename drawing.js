@@ -50,7 +50,7 @@ class gameViewLayer {
         this.context2d.lineWidth = TRAJECTORY_THICKNESS;
         this.context2d.lineCap = 'round';
         this.context2d.beginPath();
-        this.context2d.moveTo(t.points[0].x,t.points[0].y);
+        this.context2d.moveTo(t.points[0].x, t.points[0].y);
         for (let i = 1; i < t.points.length; i++) {
             this.context2d.lineTo(t.points[i].x, t.points[i].y);
         }
@@ -183,7 +183,10 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
-    static drawTrajectory(trajectory) { this.trajectoryLayer.drawTrajectory(trajectory); }
+    static drawTrajectory(trajectory) {
+        this.trajectoryLayer.clear();
+        this.trajectoryLayer.drawTrajectory(trajectory); 
+    }
 
     static drawLevel(planet) {
         this.planetLayer.clear();
@@ -192,8 +195,10 @@ class GameView {
     }
 
     static drawFCI(fci) {
-        this.controlLayer.clear();
-        this.controlLayer.drawFCI(fci);
+        if (fci != null) {
+            this.controlLayer.clear();
+            this.controlLayer.drawFCI(fci);
+        }
     }
 }
 

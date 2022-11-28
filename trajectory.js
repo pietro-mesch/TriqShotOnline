@@ -6,11 +6,14 @@ class Trajectory {
     constructor(points) { this.points = points; }
 }
 
+let lastTrajectory = null;
+
 function fire() {
     if (fci != null) {
         let points = [];
         points.push({ x: fci.x, y: fci.y });
         points.push({ x: fci.x + 1500 * Math.cos(fci.a), y: fci.y - 1500 * Math.sin(fci.a) });
-        GameView.drawTrajectory(new Trajectory(points));
+        lastTrajectory = new Trajectory(points);
+        GameView.drawTrajectory(lastTrajectory);
     }
 }
