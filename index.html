@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>TriqShotOnline</title>
     <link rel="stylesheet" href="style.css" />
 </head>
@@ -10,20 +11,18 @@
 <body onload="resizeComponents()" onresize="resizeComponents()">
     <div>
         <button class="tq_button" onclick="newGame()"> New Game </button>
+        <button class="tq_button" onclick="switchFireControl()"> FIRE CONTROL </button>
         <button class="tq_button" onclick="fire()">Fire!</button>
     </div>
 
-    <div id="gameView">
-        <canvas class="gameView-layer" id="trajectoryLayer"></canvas>
-        <canvas class="gameView-layer" id="planetLayer"></canvas>
-    </div>
-
+    <div id="gameView"></div>
         
     <script src="game.js"></script>
     <script src="resizing.js"></script>
     <script src="drawing.js"></script>
     <script src="level.js"></script>
     <script src="trajectory.js"></script>
+    <script src="control.js"></script>
 </body>
 
 </html>

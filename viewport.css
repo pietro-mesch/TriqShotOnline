@@ -10,7 +10,7 @@
 }
 
 #gameView {
-    border: 5px solid limegreen;
+    border: none;
     position: absolute;
     box-sizing: border-box;
     margin: 0;
@@ -21,17 +21,21 @@
 }
 
 .gameView-layer {
+    background-color: transparent;
     display: block;
     box-sizing: border-box;
     padding: 0;
     margin: 0;
 }
 
-#planetLayer {
-    background-color: transparent;
+#controlLayer {
+    position: relative;
 }
 
 #trajectoryLayer {
-    background-color: transparent;
+    position: absolute;
+}
+
+#planetLayer {
     position: absolute;
 }
