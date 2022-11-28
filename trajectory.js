@@ -6,6 +6,15 @@ class Trajectory {
     constructor(points) { this.points = points; }
 }
 
+class TrajectoryPoint{
+    constructor(x,y,a,v) {
+        this.x = x;
+        this.y = y;
+        this.a = a;
+        this.v = v;
+    }
+}
+
 let lastTrajectory = null;
 
 function fire() {
