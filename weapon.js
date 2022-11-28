@@ -3,7 +3,7 @@ function Weapon(weaponClass){
         case "standard":
             return {
                 v: 1000,
-                projectile_life: 10};
+                projectile_life: 100};
             break;
     
         default:

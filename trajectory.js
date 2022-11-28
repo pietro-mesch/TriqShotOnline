@@ -6,10 +6,11 @@ class Trajectory {
     constructor(points) { if (points != null) { this.points = points; } }
 
     static fromShot(fromPoint, weaponClass, planets) {
-        let dt = 0.01;
+        let dt = 0.001;
 
         let p = fromPoint;
-        p.v *= Weapon(weaponClass).v;
+        p.vx *= Weapon(weaponClass).v;
+        p.vy *= Weapon(weaponClass).v;
         let t = new Trajectory([p]);
 
         //calc first two points
@@ -23,18 +24,18 @@ class Trajectory {
 
     extend(planets, dt) {
         let p = this.lastPoint();
-        let vx = p.v * Math.cos(p.a);
-        let vy = - p.v * Math.sin(p.a);
-
         let acc = this.getAcceleration(planets);
-        let dx = vx * dt + 0.5 * acc.x * dt ** 2;
-        let dy = vy * dt + 0.5 * acc.y * dt ** 2;
-
+        
+        let dx = p.vx * dt + 0.5 * acc.x * dt ** 2;
+        let dy = p.vy * dt + 0.5 * acc.y * dt ** 2;
+        let dvx = acc.x * dt;
+        let dvy = acc.y * dt;
+        
         this.points.push(new TrajectoryPoint(
             p.x + dx,
             p.y + dy,
-            p.a,
-            p.v,
+            p.vx + dvx,
+            p.vy + dvy,
             p.t + dt)
         );
     }
@@ -90,11 +91,11 @@ class Trajectory {
 
 
 class TrajectoryPoint {
-    constructor(x, y, a, v, t) {
+    constructor(x, y, vx, vy, t) {
         this.x = x;
         this.y = y;
-        this.a = a;
-        this.v = v;
+        this.vx = vx;
+        this.vy = vy;
         this.t = t;
     }
 }
@@ -103,7 +104,7 @@ let lastTrajectory = null;
 
 function fire() {
     if (fci != null) {
-        lastTrajectory = Trajectory.fromShot(fci.getFiringVector(), fci.weapon, currentLevel.planets);
+        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentLevel.planets);
         GameView.drawTrajectory(lastTrajectory);
     }
 }

@@ -110,12 +110,12 @@ class FireControlInterface {
         this.weapon = "standard"
     }
 
-    getFiringVector() {
+    getFirstTrajectoryPoint() {
         return new TrajectoryPoint(
             this.x,
             this.y,
-            this.a,
-            this.v,
+            this.v * Math.cos(this.a),
+            - this.v * Math.sin(this.a),
             0)
     };
 

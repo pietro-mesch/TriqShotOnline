@@ -1,7 +1,7 @@
 let currentLevel = null;
 
 function Phys() {
-    return {G: 1000}
+    return {G: 100}
 }
 
 function newGame() {
