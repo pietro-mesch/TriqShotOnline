@@ -1,6 +1,6 @@
 let currentLevel = null;
 
-function newGame(){
+function newGame() {
     generateLevel();
-    drawCurrentLevel();
+    GameView.drawLevel(currentLevel);
 }

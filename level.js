@@ -11,12 +11,12 @@ class Planet {
     }
 }
 
-let planet = null;
-
-function generateLevel() {
-    planet = new Planet(GV_WIDTH, GV_HEIGHT);
+class Level {
+    constructor() {
+        this.planets = [new Planet(GV_WIDTH, GV_HEIGHT)];
+    }
 }
 
-function drawCurrentLevel(){
-    if(planet!=null){GameView.drawLevel(planet)};
+function generateLevel() {
+    currentLevel = new Level();
 }

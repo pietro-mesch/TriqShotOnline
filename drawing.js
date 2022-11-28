@@ -160,6 +160,13 @@ class GameView {
         return new gameViewLayer(id, colour, canvas.getContext('2d'));
     }
 
+    static resize() {
+        this.setDimensions(computeDimensions());
+        this.drawLevel(currentLevel);
+        this.drawTrajectory(lastTrajectory);
+        this.drawFCI(fci);
+    }
+
     static getRandomCoordinates() {
         return {
             x: Math.floor(Math.random() * (GV_WIDTH + 1)),
@@ -184,14 +191,18 @@ class GameView {
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
     static drawTrajectory(trajectory) {
-        this.trajectoryLayer.clear();
-        this.trajectoryLayer.drawTrajectory(trajectory); 
+        if (trajectory != null) {
+            this.trajectoryLayer.clear();
+            this.trajectoryLayer.drawTrajectory(trajectory);
+        }
     }
 
-    static drawLevel(planet) {
-        this.planetLayer.clear();
-        this.planetLayer.drawFrame();
-        this.drawPlanet(planet);
+    static drawLevel(level) {
+        if (level != null) {
+            this.planetLayer.clear();
+            this.planetLayer.drawFrame();
+            this.drawPlanet(level.planets[0]);
+        }
     }
 
     static drawFCI(fci) {
