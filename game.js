@@ -1,6 +1,10 @@
 let currentLevel = null;
 
-function newGame(){
+function Phys() {
+    return {G: 100}
+}
+
+function newGame() {
     generateLevel();
-    drawCurrentLevel();
+    GameView.drawLevel(currentLevel);
 }

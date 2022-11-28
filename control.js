@@ -1,13 +1,11 @@
-document.addEventListener("keydown", function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    keyDown(e);
-}, { passive: false });
+document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPropagation(); keyDown(e); }, { passive: false });
 
 function switchFireControl() {
-    let position = GameView.getRandomCoordinates();
-    fci = new FireControlInterface(position.x, position.y);
-    GameView.drawFCI(fci);
+    if (currentLevel != null) {
+        let position = GameView.getRandomCoordinates();
+        fci = new FireControlInterface(position.x, position.y);
+        GameView.drawFCI(fci);
+    }
 }
 
 function mouseDownInGameView(mouseDownEvent) {
@@ -109,7 +107,18 @@ class FireControlInterface {
         this.a = Math.random() * 2 * Math.PI;
         this.v = Math.random();
         this.trackingMouse = false;
+        this.weapon = "standard"
     }
+
+    getFirstTrajectoryPoint() {
+        return new TrajectoryPoint(
+            this.x,
+            this.y,
+            this.v * Math.cos(this.a),
+            - this.v * Math.sin(this.a),
+            0)
+    };
+
     trackPoint(x, y) {
         this.a = Math.atan((this.y - y) / (x - this.x)) + (x >= this.x ? 0 : Math.PI);
     }
