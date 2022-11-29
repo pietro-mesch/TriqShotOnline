@@ -15,7 +15,6 @@ const TRAJECTORY_LAYER_ID = "trajectoryLayer";
 const TRAJECTORY_COLOUR = "#db1616";
 
 const CONTROL_LAYER_ID = "controlLayer";
-const CONTROL_COLOUR = "#097ce8";
 
 class gameViewLayer {
     constructor(id, colour, context2d) {
@@ -73,10 +72,14 @@ class gameViewLayer {
     }
 
     drawFCI(fci) {
-        this.drawBaseFCI(fci.x, fci.y, fci.a, fci.v)
+        this.drawBaseFCI(fci)
     }
 
-    drawBaseFCI(x, y, a, v) {
+    drawBaseFCI(fci) {
+        let x = fci.ship.position.x;
+        let y = fci.ship.position.y;
+        let a = fci.a;
+        let v = fci.v;
         let r = FCI_SETTINGS.radius;
         let rinf = 2 * GV_WIDTH;
         let rv = r * v;
@@ -87,10 +90,11 @@ class gameViewLayer {
         let cos = Math.cos(a);
         let sin = Math.sin(a);
 
-        this.context2d.strokeStyle = this.colour;
+        this.context2d.strokeStyle = fci.ship.player.colour;
         this.context2d.lineCap = "round";
 
-        this.context2d.lineWidth = 2;
+        //CURRENT FIRING VECTOR
+        this.context2d.lineWidth = 2.5;
         this.context2d.setLineDash([]);
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
@@ -104,16 +108,35 @@ class gameViewLayer {
         this.context2d.moveTo(x + rv * cos, y - rv * sin);
         this.context2d.lineTo(x + rv * cos + rs * Math.cos(a + aa), y - rv * sin - rs * Math.sin(a + aa));
         this.context2d.stroke();
-
-        this.context2d.lineWidth = 1;
-        this.drawCircle(x, y, rv);
-        this.drawCircle(x, y, r);
-        this.context2d.setLineDash([3, 7]);
+        //DIRECTION
+        this.context2d.lineWidth = 1.5;
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
         this.context2d.lineTo(x + rinf * cos, y - rinf * sin);
         this.context2d.stroke();
+        //CIRCLE
+        this.drawCircle(x, y, rv);
 
+
+
+        //LAST FIRING VECTOR
+        if (fci.ship.lastFiringVector != null) {
+            this.context2d.setLineDash([3, 7]);
+            this.context2d.lineWidth = 1;
+            //DIRECTION
+            this.context2d.beginPath();
+            this.context2d.moveTo(x, y);
+            this.context2d.lineTo(x + rinf * Math.cos(fci.ship.lastFiringVector.a), y - rinf * Math.sin(fci.ship.lastFiringVector.a));
+            this.context2d.stroke();
+            //CIRCLE
+            this.drawCircle(x, y, fci.ship.lastFiringVector.v * r);
+        };
+
+
+        //REFERENCE FRAME
+        this.context2d.lineWidth = 2;
+        this.context2d.setLineDash([]);
+        this.drawCircle(x, y, r);
         this.context2d.setLineDash([15, 15]);
         this.drawCircle(x, y, r / 2);
         this.context2d.setLineDash([5, 10]);
@@ -159,7 +182,7 @@ class GameView {
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
-        this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, CONTROL_COLOUR);
+        this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
 
         this.layers = [
             this.planetLayer,
