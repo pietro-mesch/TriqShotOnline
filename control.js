@@ -1,7 +1,17 @@
 document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPropagation(); keyDown(e); }, { passive: false });
 
+function fire() {
+    if (fci != null) {
+        currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
+        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentGame.level.planets);
+        GameView.drawTrajectory(lastTrajectory);
+        currentGame.switchPlayer();
+        switchFireControl();
+    }
+}
+
 function switchFireControl() {
-    if (currentGame != null) {
+        if (currentGame != null) {
         fci = new FireControlInterface(currentGame.getActivePlayer().selectNextShip());
         GameView.drawFCI(fci);
     }
@@ -115,6 +125,10 @@ class FireControlInterface {
         this.v = ship.lastFiringVector.v;
         this.trackingMouse = false;
         this.weapon = "standard"
+    }
+
+    getCurrentFiringVector() {
+        return new FiringVector(this.a, this.v);
     }
 
     getFirstTrajectoryPoint() {

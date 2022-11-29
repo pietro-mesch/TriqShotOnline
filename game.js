@@ -29,17 +29,21 @@ class Player {
     name;
     colour;
     ships;
-    selectedShip;
+    #selectedShip;
     constructor(name, colour) {
         this.name = name;
         this.colour = colour;
         this.ships = [];
-        this.selectedShip = -1;
+        this.#selectedShip = -1;
+    }
+
+    getSelectedShip() {
+        return this.ships[this.#selectedShip];
     }
 
     selectNextShip() {
-        if (++this.selectedShip >= this.ships.length) { this.selectedShip = 0 };
-        return this.ships[this.selectedShip];
+        if (++this.#selectedShip >= this.ships.length) { this.#selectedShip = 0 };
+        return this.ships[this.#selectedShip];
     }
 
     deployShip(playerShipBox) {
