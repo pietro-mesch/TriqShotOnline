@@ -21,7 +21,7 @@ class Ship {
     constructor(position, player) {
         this.position = position;
         this.player = player;
-        this.lastFiringVector = new FiringVector();
+        this.lastFiringVector = null;
     }
 }
 

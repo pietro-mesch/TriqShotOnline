@@ -6,6 +6,10 @@ function dist(p1x, p1y, p2x, p2y) {
     return Math.sqrt((p2x - p1x) ** 2 + (p2y - p1y) ** 2);
 }
 
+function angle(x1,y1,x2,y2) {
+    return Math.atan((y1 - y2) / (x2 - x1)) + (x2 >= x1 ? 0 : Math.PI);
+}
+
 function vectorSum(x1, y1, x2, y2) {
     return {
         x: x1 + x2,

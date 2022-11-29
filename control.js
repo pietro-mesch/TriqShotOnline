@@ -11,7 +11,7 @@ function fire() {
 }
 
 function switchFireControl() {
-        if (currentGame != null) {
+    if (currentGame != null) {
         fci = new FireControlInterface(currentGame.getActivePlayer().selectNextShip());
         GameView.drawFCI(fci);
     }
@@ -110,7 +110,7 @@ function keyDown(keyDownEvent) {
 let fci = null;
 
 class FiringVector {
-    constructor(angle = Math.PI/2, velocity = 0.4) {
+    constructor(angle, velocity) {
         this.a = angle;
         this.v = velocity
     }
@@ -118,11 +118,14 @@ class FiringVector {
 
 class FireControlInterface {
     constructor(ship) {
-        this.x = ship.position.x;
-        this.y = ship.position.y;
-        this.lastFiringVector = ship.lastFiringVector;
-        this.a = ship.lastFiringVector.a;
-        this.v = ship.lastFiringVector.v;
+        this.ship = ship;
+        if (ship.lastFiringVector != null) {
+            this.a = ship.lastFiringVector.a;
+            this.v = ship.lastFiringVector.v;
+        } else {
+            this.a = Math.PI / 2;
+            this.v = 0.4;
+        };
         this.trackingMouse = false;
         this.weapon = "standard"
     }
@@ -133,16 +136,18 @@ class FireControlInterface {
 
     getFirstTrajectoryPoint() {
         return new TrajectoryPoint(
-            this.x,
-            this.y,
+            this.ship.position.x,
+            this.ship.position.y,
             this.v * Math.cos(this.a),
             - this.v * Math.sin(this.a),
             0)
     };
 
     trackPoint(x, y) {
-        this.a = Math.atan((this.y - y) / (x - this.x)) + (x >= this.x ? 0 : Math.PI);
+        // this.a = Math.atan((this.ship.position.y - y) / (x - this.ship.position.x)) + (x >= this.ship.position.x ? 0 : Math.PI);
+        this.a = angle(this.ship.position.x, this.ship.position.y, x, y);
     }
+
     adjustVelocity(delta, fast, slow) {
         this.v = Math.max(0.001, Math.min(1, this.v + Math.sign(delta) * 0.01 * (fast ? 10 : 1) * (slow ? 0.05 : 1)));
     }
