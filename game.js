@@ -1,14 +1,16 @@
-PLAYER_DEPLOYMENT_AREA = { x: 0.2, y: 0.9 };
+PLAYER_BOX_SIZE = { x: 0.2, y: 0.9 };
+PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 
-let currentLevel = null;
+let currentGame = null;
 
 function Phys() {
     return { G: 100 }
 }
 
 function newGame() {
-    generateLevel();
-    GameView.drawLevel(currentLevel);
+    currentGame = new Game();
+    GameView.drawLevel(currentGame.level);
+    currentGame.deployShips();
 }
 
 class Ship {
@@ -39,12 +41,12 @@ class Game {
     }
 
     deployShips() {
-        for (let i = 0; i < this.players.length; index++) {
+        for (let i = 0; i < this.players.length; i++) {
             this.playerDeployShip(i);
         }
     }
     playerDeployShip(playerIndex) {
-        position = GameView.getPlayerDeploymentBox(playerIndex).randomPoint();
-        playerIndex.ships.push(new Ship(position));
+        let position = GameView.getPlayerDeploymentBox(playerIndex).randomPoint();
+        this.players[playerIndex].ships.push(new Ship(position));
     }
 }

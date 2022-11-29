@@ -162,35 +162,52 @@ class GameView {
 
     static resize() {
         this.setDimensions(computeDimensions());
-        this.drawLevel(currentLevel);
-        this.drawTrajectory(lastTrajectory);
-        this.drawFCI(fci);
+        this.draw();
+    }
+
+    static draw() {
+        if (currentGame != null) {
+            this.drawLevel(currentGame.level);
+            this.drawTrajectory(lastTrajectory);
+            this.drawFCI(fci);
+        }
     }
 
     //CLEANUP
     static getPlayerDeploymentBox(playerIndex) {
+        let x = PLAYER_BOX_SIZE.x;
+        let y = PLAYER_BOX_SIZE.y;
         switch (playerIndex) {
             case 0:
                 return new Box(
                     0,
-                    GV_HEIGHT * (1 - PLAYER_DEPLOYMENT_AREA.y) / 2,
-                    GV_WIDTH * PLAYER_DEPLOYMENT_AREA.x,
-                    GV_HEIGHT * (1 + PLAYER_DEPLOYMENT_AREA.y) / 2
+                    GV_HEIGHT * (1 - y) / 2,
+                    GV_WIDTH * x,
+                    GV_HEIGHT * (1 + y) / 2
                 );
                 break;
 
             case 1:
                 return new Box(
-                    GV_WIDTH * (1 - PLAYER_DEPLOYMENT_AREA.x),
-                    GV_HEIGHT * (1 - PLAYER_DEPLOYMENT_AREA.y) / 2,
+                    GV_WIDTH * (1 - x),
+                    GV_HEIGHT * (1 - y) / 2,
                     GV_WIDTH,
-                    GV_HEIGHT * (1 + PLAYER_DEPLOYMENT_AREA.y) / 2
+                    GV_HEIGHT * (1 + y) / 2
                 );
                 break;
 
             default:
                 break;
         }
+    }
+
+    static getPlanetBox() {
+        return new Box(
+            GV_WIDTH * (1 - PLANET_BOX_SIZE.x) / 2,
+            GV_HEIGHT * (1 - PLANET_BOX_SIZE.y) / 2,
+            GV_WIDTH * (1 + PLANET_BOX_SIZE.x) / 2,
+            GV_HEIGHT * (1 + PLANET_BOX_SIZE.y) / 2
+        );
     }
 
     static getRandomCoordinates() {
