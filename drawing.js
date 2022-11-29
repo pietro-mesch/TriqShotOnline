@@ -9,6 +9,8 @@ FCI_SETTINGS = {
 const PLANET_LAYER_ID = "planetLayer";
 const PLANET_COLOUR = "#32cd32";
 
+const SHIP_LAYER_ID = "shipLayer";
+
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
 const TRAJECTORY_COLOUR = "#db1616";
 
@@ -55,6 +57,19 @@ class gameViewLayer {
             this.context2d.lineTo(t.points[i].x, t.points[i].y);
         }
         this.context2d.stroke();
+    }
+
+    drawShip(ship) {
+        let r = 5;
+        let x = ship.position.x;
+        let y = ship.position.y;
+
+        this.context2d.fillStyle = ship.colour;
+        this.context2d.beginPath();
+        this.context2d.moveTo(x, y - 2 * r);
+        this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
+        this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
+        this.context2d.fill();
     }
 
     drawFCI(fci) {
@@ -122,6 +137,7 @@ class GameView {
     static htmlElement;
     static planetLayer;
     static trajectoryLayer;
+    static shipLayer;
     static controlLayer;
 
     static dimensions;
@@ -142,11 +158,13 @@ class GameView {
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
+        this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, CONTROL_COLOUR);
 
         this.layers = [
             this.planetLayer,
             this.trajectoryLayer,
+            this.shipLayer,
             this.controlLayer
         ];
     };
@@ -162,21 +180,21 @@ class GameView {
 
     static resize() {
         this.setDimensions(computeDimensions());
-        this.draw();
+        this.redraw();
     }
 
-    static draw() {
+    static redraw() {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
             this.drawTrajectory(lastTrajectory);
+            this.drawShips(currentGame);
             this.drawFCI(fci);
         }
     }
 
-    //CLEANUP
     static getPlayerDeploymentBox(playerIndex) {
-        let x = PLAYER_BOX_SIZE.x;
-        let y = PLAYER_BOX_SIZE.y;
+        let x = SHIP_BOX_SIZE.x;
+        let y = SHIP_BOX_SIZE.y;
         switch (playerIndex) {
             case 0:
                 return new Box(
@@ -185,7 +203,6 @@ class GameView {
                     GV_WIDTH * x,
                     GV_HEIGHT * (1 + y) / 2
                 );
-                break;
 
             case 1:
                 return new Box(
@@ -194,7 +211,6 @@ class GameView {
                     GV_WIDTH,
                     GV_HEIGHT * (1 + y) / 2
                 );
-                break;
 
             default:
                 break;
@@ -241,11 +257,18 @@ class GameView {
     }
 
     static drawLevel(level) {
-        if (level != null) {
-            this.planetLayer.clear();
-            this.planetLayer.drawFrame();
-            this.drawPlanet(level.planets[0]);
-        }
+        this.planetLayer.clear();
+        this.planetLayer.drawFrame();
+        this.drawPlanet(level.planets[0]);
+    }
+
+    static drawShips(game) {
+        this.shipLayer.clear();
+        game.players.forEach(player => {
+            player.ships.forEach(ship => {
+                this.shipLayer.drawShip(ship);
+            });
+        });
     }
 
     static drawFCI(fci) {

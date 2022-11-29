@@ -105,7 +105,7 @@ let lastTrajectory = null;
 
 function fire() {
     if (fci != null) {
-        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentLevel.planets);
+        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentGame.level.planets);
         GameView.drawTrajectory(lastTrajectory);
     }
 }

@@ -1,7 +1,7 @@
 document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPropagation(); keyDown(e); }, { passive: false });
 
 function switchFireControl() {
-    if (currentLevel != null) {
+    if (currentGame != null) {
         let position = GameView.getRandomCoordinates();
         fci = new FireControlInterface(position.x, position.y);
         GameView.drawFCI(fci);
