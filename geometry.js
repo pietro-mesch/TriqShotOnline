@@ -1,3 +1,7 @@
+function randInt(inclusiveMin, inclusiveMax){
+    return Math.floor(inclusiveMin) + Math.floor(Math.random() * (inclusiveMax + 1));
+}
+
 function dist(p1x, p1y, p2x, p2y) {
     return Math.sqrt((p2x - p1x) ** 2 + (p2y - p1y) ** 2);
 }

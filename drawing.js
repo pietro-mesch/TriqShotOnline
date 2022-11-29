@@ -264,11 +264,11 @@ class GameView {
 
     static drawShips(game) {
         this.shipLayer.clear();
-        game.players.forEach(player => {
-            player.ships.forEach(ship => {
+        for (let i = 0; i < game.numPlayers; i++) {
+            players[i].ships.forEach(ship => {
                 this.shipLayer.drawShip(ship);
             });
-        });
+        };
     }
 
     static drawFCI(fci) {
