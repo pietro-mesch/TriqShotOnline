@@ -1,7 +1,8 @@
-const TRAJECTORY_THICKNESS = 3;
+const TRAJECTORY_THICKNESS = 2;
 
 class Trajectory {
     static MAX_LENGTH = 1000;
+
     points = [];
     constructor(points) { if (points != null) { this.points = points; } }
 

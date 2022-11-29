@@ -8,3 +8,16 @@ function newGame() {
     generateLevel();
     GameView.drawLevel(currentLevel);
 }
+
+class Ship {
+    position;
+}
+
+class Player {
+    colour;
+}
+
+class Game {
+    level;
+    players;
+}
