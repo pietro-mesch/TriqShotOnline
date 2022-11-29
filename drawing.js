@@ -226,13 +226,6 @@ class GameView {
         );
     }
 
-    static getRandomCoordinates() {
-        return {
-            x: Math.floor(Math.random() * (GV_WIDTH + 1)),
-            y: Math.floor(Math.random() * (GV_HEIGHT + 1))
-        };
-    }
-
     static getScaledCoordinates(window_x, window_y) {
         let rect = this.htmlElement.getBoundingClientRect();
         let x = (window_x - rect.left) / GameView.dimensions.scale;

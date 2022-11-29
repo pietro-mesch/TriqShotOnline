@@ -2,8 +2,7 @@ document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPr
 
 function switchFireControl() {
     if (currentGame != null) {
-        let position = GameView.getRandomCoordinates();
-        fci = new FireControlInterface(position.x, position.y);
+        fci = new FireControlInterface(currentGame.getActivePlayer().selectNextShip());
         GameView.drawFCI(fci);
     }
 }
@@ -100,12 +99,20 @@ function keyDown(keyDownEvent) {
 
 let fci = null;
 
+class FiringVector {
+    constructor(angle = Math.PI/2, velocity = 0.4) {
+        this.a = angle;
+        this.v = velocity
+    }
+}
+
 class FireControlInterface {
-    constructor(x, y) {
-        this.x = x;
-        this.y = y;
-        this.a = Math.random() * 2 * Math.PI;
-        this.v = Math.random();
+    constructor(ship) {
+        this.x = ship.position.x;
+        this.y = ship.position.y;
+        this.lastFiringVector = ship.lastFiringVector;
+        this.a = ship.lastFiringVector.a;
+        this.v = ship.lastFiringVector.v;
         this.trackingMouse = false;
         this.weapon = "standard"
     }

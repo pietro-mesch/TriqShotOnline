@@ -8,7 +8,7 @@ function Phys() {
 }
 
 function newGame() {
-    currentGame = new Game();
+    currentGame = new Game(2, 2);
     GameView.drawLevel(currentGame.level);
     currentGame.deployShips();
     currentGame.switchPlayer();
@@ -17,9 +17,11 @@ function newGame() {
 class Ship {
     position;
     player;
+    lastFiringVector;
     constructor(position, player) {
         this.position = position;
         this.player = player;
+        this.lastFiringVector = new FiringVector();
     }
 }
 
@@ -27,11 +29,19 @@ class Player {
     name;
     colour;
     ships;
+    selectedShip;
     constructor(name, colour) {
         this.name = name;
         this.colour = colour;
         this.ships = [];
+        this.selectedShip = -1;
     }
+
+    selectNextShip() {
+        if (++this.selectedShip >= this.ships.length) { this.selectedShip = 0 };
+        return this.ships[this.selectedShip];
+    }
+
     deployShip(playerShipBox) {
         this.ships.push(
             new Ship(playerShipBox.randomPoint(), this)
@@ -49,16 +59,18 @@ let players = [
 class Game {
     level;
     numPlayers;
+    numShips;
     #players;
     #playerOrderIndex;
-    constructor(numPlayers = 2) {
+    constructor(numPlayers, numShips) {
         this.numPlayers = numPlayers;
+        this.numShips = numShips;
         this.level = new Level();
         this.#players = this.getActivePlayerArray(numPlayers);
         this.#playerOrderIndex = -1;
     }
 
-    activePlayer() {
+    getActivePlayer() {
         return this.#players[this.#playerOrderIndex];
     }
 
@@ -73,15 +85,17 @@ class Game {
     }
 
     switchPlayer() {
-        this.#playerOrderIndex++;
-        if (this.#playerOrderIndex = this.numPlayers) { this.#playerOrderIndex = 0 };
+        if (++this.#playerOrderIndex > this.numPlayers - 1) { this.#playerOrderIndex = 0 };
     }
 
     deployShips() {
         players.forEach(p => p.ships = []);
-        this.#players.forEach((p, i) => {
-            p.deployShip(GameView.getPlayerDeploymentBox(i));
-        });
+        for (let n = 0; n < this.numShips; n++) {
+            this.#players.forEach((p, i) => {
+                p.deployShip(GameView.getPlayerDeploymentBox(i));
+            });
+        }
+
         GameView.drawShips(this);
     }
 
