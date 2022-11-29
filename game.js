@@ -15,10 +15,10 @@ function newGame() {
 
 class Ship {
     position;
-    colour;
-    constructor(position, colour) {
+    player;
+    constructor(position, player) {
         this.position = position;
-        this.colour = colour;
+        this.player = player;
     }
 }
 
@@ -29,29 +29,34 @@ class Player {
         this.colour = colour;
         this.ships = [];
     }
+    deployShip(playerShipBox) {
+        this.ships.push(
+            new Ship(playerShipBox.randomPoint(), this)
+        );
+    }
 }
+
+let players = [
+    new Player("#ff0022"),
+    new Player("#0066ff"),
+    new Player(null),
+    new Player(null)
+]
 
 class Game {
     level;
     players;
-    constructor() {
+    constructor(numPlayers = 2) {
         this.level = new Level();
-        this.players = [
-            new Player("#ff0022"),
-            new Player("#0066ff")
-        ]
+        this.players = Array.from(Array(numPlayers), (p, i) => p = players[i]);
     }
 
     deployShips() {
-        for (let i = 0; i < this.players.length; i++) {
-            this.playerDeployShip(i);
-        }
+        players.forEach(p => p.ships = []);
+        this.players.forEach((p, i) => {
+            p.deployShip(GameView.getPlayerDeploymentBox(i));
+        });
         GameView.drawShips(this);
     }
-    playerDeployShip(playerIndex) {
-        let position = GameView.getPlayerDeploymentBox(playerIndex).randomPoint();
-        this.players[playerIndex].ships.push(new Ship(
-            position, this.players[playerIndex].colour
-        ));
-    }
+
 }

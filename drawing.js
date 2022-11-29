@@ -64,7 +64,7 @@ class gameViewLayer {
         let x = ship.position.x;
         let y = ship.position.y;
 
-        this.context2d.fillStyle = ship.colour;
+        this.context2d.fillStyle = ship.player.colour;
         this.context2d.beginPath();
         this.context2d.moveTo(x, y - 2 * r);
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
