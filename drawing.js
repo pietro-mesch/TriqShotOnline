@@ -167,6 +167,32 @@ class GameView {
         this.drawFCI(fci);
     }
 
+    //CLEANUP
+    static getPlayerDeploymentBox(playerIndex) {
+        switch (playerIndex) {
+            case 0:
+                return new Box(
+                    0,
+                    GV_HEIGHT * (1 - PLAYER_DEPLOYMENT_AREA.y) / 2,
+                    GV_WIDTH * PLAYER_DEPLOYMENT_AREA.x,
+                    GV_HEIGHT * (1 + PLAYER_DEPLOYMENT_AREA.y) / 2
+                );
+                break;
+
+            case 1:
+                return new Box(
+                    GV_WIDTH * (1 - PLAYER_DEPLOYMENT_AREA.x),
+                    GV_HEIGHT * (1 - PLAYER_DEPLOYMENT_AREA.y) / 2,
+                    GV_WIDTH,
+                    GV_HEIGHT * (1 + PLAYER_DEPLOYMENT_AREA.y) / 2
+                );
+                break;
+
+            default:
+                break;
+        }
+    }
+
     static getRandomCoordinates() {
         return {
             x: Math.floor(Math.random() * (GV_WIDTH + 1)),
