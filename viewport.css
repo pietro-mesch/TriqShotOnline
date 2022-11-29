@@ -32,6 +32,10 @@
     position: relative;
 }
 
+#shipLayer {
+    position: absolute;
+}
+
 #trajectoryLayer {
     position: absolute;
 }

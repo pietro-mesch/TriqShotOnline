@@ -1,7 +1,8 @@
-const TRAJECTORY_THICKNESS = 3;
+const TRAJECTORY_THICKNESS = 2;
 
 class Trajectory {
     static MAX_LENGTH = 1000;
+
     points = [];
     constructor(points) { if (points != null) { this.points = points; } }
 
@@ -101,10 +102,3 @@ class TrajectoryPoint {
 }
 
 let lastTrajectory = null;
-
-function fire() {
-    if (fci != null) {
-        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentLevel.planets);
-        GameView.drawTrajectory(lastTrajectory);
-    }
-}
