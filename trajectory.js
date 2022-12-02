@@ -1,4 +1,12 @@
 const TRAJECTORY_THICKNESS = 2;
+class Shot{
+    player;
+    trajectory;
+    constructor(player, firstPoint, weaponClass){
+        this.player = player;
+        this.trajectory = Trajectory.fromShot(firstPoint, weaponClass, currentGame.level.planets);
+    }
+}
 
 class Trajectory {
     static MAX_LENGTH = 1000;

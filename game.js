@@ -64,12 +64,14 @@ class Game {
     level;
     numPlayers;
     numShips;
+    shots;
     #players;
     #playerOrderIndex;
     constructor(numPlayers, numShips) {
         this.numPlayers = numPlayers;
         this.numShips = numShips;
         this.level = new Level();
+        this.shots = [];
         this.#players = this.getActivePlayerArray(numPlayers);
         this.#playerOrderIndex = -1;
     }

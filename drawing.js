@@ -12,7 +12,6 @@ const PLANET_COLOUR = "#32cd32";
 const SHIP_LAYER_ID = "shipLayer";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
-const TRAJECTORY_COLOUR = "#db1616";
 
 const CONTROL_LAYER_ID = "controlLayer";
 
@@ -46,8 +45,8 @@ class gameViewLayer {
         this.drawCircle(p.x, p.y, p.radius);
     }
 
-    drawTrajectory(t) {
-        this.context2d.strokeStyle = this.colour;
+    drawTrajectory(t, colour) {
+        this.context2d.strokeStyle = colour;
         this.context2d.lineWidth = TRAJECTORY_THICKNESS;
         this.context2d.lineCap = 'round';
         this.context2d.beginPath();
@@ -180,7 +179,7 @@ class GameView {
         }, { passive: false });
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
-        this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
+        this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
 
@@ -209,7 +208,7 @@ class GameView {
     static redraw() {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
-            this.drawTrajectory(lastTrajectory);
+            this.drawOldShotTrajectories(currentGame.shots);
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
@@ -265,10 +264,12 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
-    static drawTrajectory(trajectory) {
-        if (trajectory != null) {
+    static drawOldShotTrajectories(shots) {
+        if (currentGame != null) {
             this.trajectoryLayer.clear();
-            this.trajectoryLayer.drawTrajectory(trajectory);
+            shots.forEach(shot => {
+                this.trajectoryLayer.drawTrajectory(shot.trajectory, shot.player.colour);
+            });
         }
     }
 
