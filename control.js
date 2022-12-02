@@ -3,8 +3,8 @@ document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPr
 function fire() {
     if (fci != null) {
         currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
-        lastTrajectory = Trajectory.fromShot(fci.getFirstTrajectoryPoint(), fci.weapon, currentGame.level.planets);
-        GameView.drawTrajectory(lastTrajectory);
+        currentGame.shots.push(fci.getCurrentShot());
+        GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
         currentGame.switchPlayer();
         switchFireControl();
     }
@@ -142,6 +142,10 @@ class FireControlInterface {
             - this.v * Math.sin(this.a),
             0)
     };
+
+    getCurrentShot(){
+        return new Shot(this.ship.player, fci.getFirstTrajectoryPoint(), fci.weapon)
+    }
 
     trackPoint(x, y) {
         // this.a = Math.atan((this.ship.position.y - y) / (x - this.ship.position.x)) + (x >= this.ship.position.x ? 0 : Math.PI);

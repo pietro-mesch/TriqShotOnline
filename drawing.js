@@ -1,6 +1,7 @@
 const GV_ASPECT = 9 / 5;
 const GV_WIDTH = 1500;
 const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
+const OLD_SHOTS_LIMIT = 20;
 
 FCI_SETTINGS = {
     radius: 100
@@ -12,7 +13,6 @@ const PLANET_COLOUR = "#32cd32";
 const SHIP_LAYER_ID = "shipLayer";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
-const TRAJECTORY_COLOUR = "#db1616";
 
 const CONTROL_LAYER_ID = "controlLayer";
 
@@ -46,9 +46,9 @@ class gameViewLayer {
         this.drawCircle(p.x, p.y, p.radius);
     }
 
-    drawTrajectory(t) {
-        this.context2d.strokeStyle = this.colour;
-        this.context2d.lineWidth = TRAJECTORY_THICKNESS;
+    drawTrajectory(t, colour, lineWidth) {
+        this.context2d.strokeStyle = colour;
+        this.context2d.lineWidth = lineWidth;
         this.context2d.lineCap = 'round';
         this.context2d.beginPath();
         this.context2d.moveTo(t.points[0].x, t.points[0].y);
@@ -180,7 +180,7 @@ class GameView {
         }, { passive: false });
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
-        this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, TRAJECTORY_COLOUR);
+        this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
 
@@ -209,7 +209,7 @@ class GameView {
     static redraw() {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
-            this.drawTrajectory(lastTrajectory);
+            this.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
@@ -265,11 +265,25 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
-    static drawTrajectory(trajectory) {
-        if (trajectory != null) {
+    static drawOldShotTrajectories(shots) {
+        if (currentGame != null) {
             this.trajectoryLayer.clear();
-            this.trajectoryLayer.drawTrajectory(trajectory);
+            shots.forEach((shot, i) => {
+                if (shot != null) {
+                    this.trajectoryLayer.drawTrajectory(
+                        shot.trajectory, this.alphaColour(shot.player.colour, i), OLD_TRAJECTORY_LINEWIDTH
+                    );
+                }
+            });
         }
+    }
+
+    static alphaColour(colour, i) {
+        let MAX_ALPHA = 0.9;
+        let MIN_ALPHA = 0.1;
+        let alpha = Math.round((MIN_ALPHA + (i) * (MAX_ALPHA - MIN_ALPHA) / (OLD_SHOTS_LIMIT)) * 256);
+        let hex = alpha.toString(16);
+        return colour + hex;
     }
 
     static drawLevel(level) {
