@@ -1,5 +1,5 @@
-SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
-PLANET_BOX_SIZE = { x: 0.7, y: 1 };
+const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
+const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 
 let currentGame = null;
 
@@ -88,6 +88,10 @@ class Game {
             indices[i] = x;
         };
         return Array.from(Array(numPlayers), (p, i) => p = players[indices[i]]);
+    }
+
+    getLastShots(count) {
+        return new Array(count).concat(this.shots.slice(-count)).slice(-count);
     }
 
     switchPlayer() {

@@ -209,7 +209,7 @@ class GameView {
     static redraw() {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
-            this.drawOldShotTrajectories(currentGame.shots);
+            this.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
@@ -269,9 +269,11 @@ class GameView {
         if (currentGame != null) {
             this.trajectoryLayer.clear();
             shots.forEach((shot, i) => {
-                this.trajectoryLayer.drawTrajectory(
-                    shot.trajectory, this.alphaColour(shot.player.colour, i), OLD_TRAJECTORY_LINEWIDTH
-                );
+                if (shot != null) {
+                    this.trajectoryLayer.drawTrajectory(
+                        shot.trajectory, this.alphaColour(shot.player.colour, i), OLD_TRAJECTORY_LINEWIDTH
+                    );
+                }
             });
         }
     }
@@ -279,7 +281,7 @@ class GameView {
     static alphaColour(colour, i) {
         let MAX_ALPHA = 0.9;
         let MIN_ALPHA = 0.1;
-        let alpha = Math.round((MIN_ALPHA + (i)*(MAX_ALPHA-MIN_ALPHA)/(OLD_SHOTS_LIMIT))*256);
+        let alpha = Math.round((MIN_ALPHA + (i) * (MAX_ALPHA - MIN_ALPHA) / (OLD_SHOTS_LIMIT)) * 256);
         let hex = alpha.toString(16);
         return colour + hex;
     }

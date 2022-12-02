@@ -4,7 +4,7 @@ function fire() {
     if (fci != null) {
         currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
         currentGame.shots.push(fci.getCurrentShot());
-        GameView.drawOldShotTrajectories(currentGame.shots);
+        GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
         currentGame.switchPlayer();
         switchFireControl();
     }
