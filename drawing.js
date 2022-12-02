@@ -1,6 +1,7 @@
 const GV_ASPECT = 9 / 5;
 const GV_WIDTH = 1500;
 const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
+const OLD_SHOTS_LIMIT = 20;
 
 FCI_SETTINGS = {
     radius: 100
@@ -45,9 +46,9 @@ class gameViewLayer {
         this.drawCircle(p.x, p.y, p.radius);
     }
 
-    drawTrajectory(t, colour) {
+    drawTrajectory(t, colour, lineWidth) {
         this.context2d.strokeStyle = colour;
-        this.context2d.lineWidth = TRAJECTORY_THICKNESS;
+        this.context2d.lineWidth = lineWidth;
         this.context2d.lineCap = 'round';
         this.context2d.beginPath();
         this.context2d.moveTo(t.points[0].x, t.points[0].y);
@@ -267,10 +268,20 @@ class GameView {
     static drawOldShotTrajectories(shots) {
         if (currentGame != null) {
             this.trajectoryLayer.clear();
-            shots.forEach(shot => {
-                this.trajectoryLayer.drawTrajectory(shot.trajectory, shot.player.colour);
+            shots.forEach((shot, i) => {
+                this.trajectoryLayer.drawTrajectory(
+                    shot.trajectory, this.alphaColour(shot.player.colour, i), OLD_TRAJECTORY_LINEWIDTH
+                );
             });
         }
+    }
+
+    static alphaColour(colour, i) {
+        let MAX_ALPHA = 0.9;
+        let MIN_ALPHA = 0.1;
+        let alpha = Math.round((MIN_ALPHA + (i)*(MAX_ALPHA-MIN_ALPHA)/(OLD_SHOTS_LIMIT))*256);
+        let hex = alpha.toString(16);
+        return colour + hex;
     }
 
     static drawLevel(level) {

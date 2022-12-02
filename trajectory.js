@@ -1,4 +1,6 @@
-const TRAJECTORY_THICKNESS = 2;
+const TRAJECTORY_LINEWIDTH = 2;
+const OLD_TRAJECTORY_LINEWIDTH = 1.5;
+
 class Shot{
     player;
     trajectory;
