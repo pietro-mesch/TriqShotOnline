@@ -1,5 +1,7 @@
 const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
 const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
+const NUM_PLAYERS = 2;
+const NUM_SHIPS = 1;
 
 let currentGame = null;
 
@@ -8,8 +10,8 @@ function Phys() {
 }
 
 function newGame() {
-    currentGame = new Game(2, 2);
-    GameView.drawLevel(currentGame.level);
+    currentGame = new Game(NUM_PLAYERS, NUM_SHIPS);
+    GameView.redraw();
     currentGame.deployShips();
     currentGame.switchPlayer();
 }
@@ -29,8 +31,8 @@ class Ship {
     }
 
     getLastShot(shots) {
-        for (let i = shots.length - 1; i >=0; i--){
-            if (shots[i] != null && shots[i].ship == this){
+        for (let i = shots.length - 1; i >= 0; i--) {
+            if (shots[i] != null && shots[i].ship == this) {
                 return shots[i];
             }
         }
@@ -63,7 +65,10 @@ class Player {
     }
 
     selectNextShip() {
-        if (++this.#selectedShip >= this.ships.length) { this.#selectedShip = 0 };
+        this.#selectedShip = this.ships.concat(this.ships).findIndex((ship, i) => {
+            return i > this.#selectedShip && ship.status != 1
+        }) % this.ships.length;
+        // if (++this.#selectedShip >= this.ships.length) { this.#selectedShip = 0 };
         return this.ships[this.#selectedShip];
     }
 
@@ -115,15 +120,15 @@ class Game {
         return new Array(count).concat(this.shots.slice(-count)).slice(-count);
     }
 
-    getOkShips(){
+    getOkShips() {
         return this.getShips(ship => ship.status == 0);
     }
 
-    getShips(condition = x => true){
+    getShips(condition = x => true) {
         let ships = [];
         this.#players.forEach(p => {
             p.ships.forEach(s => {
-                if (condition(s)){
+                if (condition(s)) {
                     ships.push(s);
                 }
             })
@@ -131,8 +136,29 @@ class Game {
         return ships;
     }
 
+    endTurn() {
+        let standing = this.getStandingPlayers();
+        if (standing.length > 1) {
+            currentGame.switchPlayer();
+            switchFireControl();
+        } else {
+            this.endGame(standing);
+        }
+    }
+
+    getStandingPlayers() {
+        return this.#players.filter(player => player.ships.some(ship => ship.status != 1))
+    }
+
     switchPlayer() {
         if (++this.#playerOrderIndex > this.numPlayers - 1) { this.#playerOrderIndex = 0 };
+    }
+
+    endGame(standing) {
+        let winner = (standing.length == 1 ? standing[0] : this.shots.at(-1).ship.player);
+        this.#playerOrderIndex = -1;
+        GameView.clearControlLayer();
+        console.log(winner.name + " WINS!");
     }
 
     deployShips() {

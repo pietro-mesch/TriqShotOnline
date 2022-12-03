@@ -350,6 +350,10 @@ class GameView {
             this.controlLayer.drawFCI(fci);
         }
     }
+
+    static clearControlLayer(){
+        this.controlLayer.clear();
+    }
 }
 
 class GameViewDimensions {

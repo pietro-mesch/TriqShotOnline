@@ -45,8 +45,8 @@ class Shot {
         let hitShip = this.trajectory.hitShip(ships);
         if (!(this.#fired) && hitShip != firingShip) { this.#fired = true };
         if (hitShip == firingShip ? this.#fired : hitShip != null) {
-            hitShip.status = 1;
             hitConfirmed = true;
+            hitShip.status = 1;
             this.status = 1;
             GameView.crossoutShip(hitShip);
         }
