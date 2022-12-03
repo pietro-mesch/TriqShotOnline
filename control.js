@@ -9,6 +9,10 @@ function fire() {
     }
 }
 
+function clearFireControl(){
+    fci = null;
+}
+
 function switchFireControl() {
     if (currentGame != null) {
         fci = new FireControlInterface(currentGame.getActivePlayer().selectNextShip());

@@ -157,6 +157,7 @@ class Game {
     endGame(standing) {
         let winner = (standing.length == 1 ? standing[0] : this.shots.at(-1).ship.player);
         this.#playerOrderIndex = -1;
+        clearFireControl();
         GameView.clearControlLayer();
         console.log(winner.name + " WINS!");
     }
