@@ -48,6 +48,7 @@ class Shot {
             hitShip.status = 1;
             hitConfirmed = true;
             this.status = 1;
+            GameView.crossoutShip(hitShip);
         }
         return hitConfirmed;
     }

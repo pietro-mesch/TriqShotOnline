@@ -80,11 +80,37 @@ class gameViewLayer {
         let y = ship.position.y;
 
         this.context2d.fillStyle = ship.player.colour;
+        this.context2d.strokeStyle = ship.player.colour;
         this.context2d.beginPath();
         this.context2d.moveTo(x, y - 2 * r);
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
+        // switch (ship.status) {
+        //     case 0:
+        //         this.context2d.fill();
+        //         break;
+        //     case 1:
+        //         this.context2d.closePath();
+        //         this.context2d.stroke();
+        //     default:
+        //         break;
+        // }
+    }
+
+    crossoutShip(ship) {
+        let r = ship.radius * 5;
+        let x = ship.position.x;
+        let y = ship.position.y;
+
+        this.context2d.strokeStyle = ship.player.colour;
+        this.context2d.beginPath();
+        this.context2d.moveTo(x - r * Math.SQRT2 / 2, y - r * Math.SQRT2 / 2);
+        this.context2d.lineTo(x + r * Math.SQRT2 / 2, y + r * Math.SQRT2 / 2);
+        this.context2d.stroke();
+        this.context2d.moveTo(x - r * Math.SQRT2 / 2, y + r * Math.SQRT2 / 2);
+        this.context2d.lineTo(x + r * Math.SQRT2 / 2, y - r * Math.SQRT2 / 2);
+        this.context2d.stroke();
     }
 
     drawFCI(fci) {
@@ -299,8 +325,6 @@ class GameView {
         }
     }
 
-
-
     static drawLevel(level) {
         this.planetLayer.clear();
         this.planetLayer.drawFrame();
@@ -314,6 +338,10 @@ class GameView {
                 this.shipLayer.drawShip(ship);
             });
         };
+    }
+
+    static crossoutShip(ship) {
+        this.shipLayer.crossoutShip(ship);
     }
 
     static drawFCI(fci) {
