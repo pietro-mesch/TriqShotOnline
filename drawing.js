@@ -3,6 +3,22 @@ const GV_WIDTH = 1500;
 const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
 const OLD_SHOTS_LIMIT = 20;
 
+class G {
+    static MAX_ALPHA = 0.8;
+    static MIN_ALPHA = 0.1
+    static getTrajectoryAlpha(i) {
+        return this.MIN_ALPHA + (i) * (this.MAX_ALPHA - this.MIN_ALPHA) / (OLD_SHOTS_LIMIT);
+    }
+
+    static getTrajectoryWidth(i) {
+        return OLD_TRAJECTORY_LINEWIDTH; // + (OLD_SHOTS_LIMIT - i <= 2 ? 1 : 0)
+    }
+
+    static alphaColour(colour, alpha) {
+        return colour + Math.round(alpha * 256).toString(16);
+    }
+}
+
 FCI_SETTINGS = {
     radius: 100
 }
@@ -59,16 +75,42 @@ class gameViewLayer {
     }
 
     drawShip(ship) {
-        let r = 5;
+        let r = ship.radius;
         let x = ship.position.x;
         let y = ship.position.y;
 
         this.context2d.fillStyle = ship.player.colour;
+        this.context2d.strokeStyle = ship.player.colour;
         this.context2d.beginPath();
         this.context2d.moveTo(x, y - 2 * r);
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
+        // switch (ship.status) {
+        //     case 0:
+        //         this.context2d.fill();
+        //         break;
+        //     case 1:
+        //         this.context2d.closePath();
+        //         this.context2d.stroke();
+        //     default:
+        //         break;
+        // }
+    }
+
+    crossoutShip(ship) {
+        let r = ship.radius * 5;
+        let x = ship.position.x;
+        let y = ship.position.y;
+
+        this.context2d.strokeStyle = ship.player.colour;
+        this.context2d.beginPath();
+        this.context2d.moveTo(x - r * Math.SQRT2 / 2, y - r * Math.SQRT2 / 2);
+        this.context2d.lineTo(x + r * Math.SQRT2 / 2, y + r * Math.SQRT2 / 2);
+        this.context2d.stroke();
+        this.context2d.moveTo(x - r * Math.SQRT2 / 2, y + r * Math.SQRT2 / 2);
+        this.context2d.lineTo(x + r * Math.SQRT2 / 2, y - r * Math.SQRT2 / 2);
+        this.context2d.stroke();
     }
 
     drawFCI(fci) {
@@ -94,7 +136,7 @@ class gameViewLayer {
         this.context2d.lineCap = "round";
 
         //CURRENT FIRING VECTOR
-        this.context2d.lineWidth = 2.5;
+        this.context2d.lineWidth = 3;
         this.context2d.setLineDash([]);
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
@@ -109,7 +151,7 @@ class gameViewLayer {
         this.context2d.lineTo(x + rv * cos + rs * Math.cos(a + aa), y - rv * sin - rs * Math.sin(a + aa));
         this.context2d.stroke();
         //DIRECTION
-        this.context2d.lineWidth = 1.5;
+        this.context2d.lineWidth = 2;
         this.context2d.beginPath();
         this.context2d.moveTo(x, y);
         this.context2d.lineTo(x + rinf * cos, y - rinf * sin);
@@ -121,8 +163,8 @@ class gameViewLayer {
 
         //LAST FIRING VECTOR
         if (fci.ship.lastFiringVector != null) {
-            this.context2d.setLineDash([3, 7]);
-            this.context2d.lineWidth = 1;
+            this.context2d.setLineDash([5, 5]);
+            this.context2d.lineWidth = 1.5;
             //DIRECTION
             this.context2d.beginPath();
             this.context2d.moveTo(x, y);
@@ -130,16 +172,20 @@ class gameViewLayer {
             this.context2d.stroke();
             //CIRCLE
             this.drawCircle(x, y, fci.ship.lastFiringVector.v * r);
+            //TRAJECTORY
+            this.drawTrajectory(fci.ship.getLastShot(currentGame.getLastShots()).trajectory, G.MAX_ALPHA, OLD_TRAJECTORY_LINEWIDTH + 1)
         };
 
 
         //REFERENCE FRAME
-        this.context2d.lineWidth = 2;
+        this.context2d.strokeStyle = G.alphaColour(fci.ship.player.colour, 0.5);
+        this.context2d.lineWidth = 3;
         this.context2d.setLineDash([]);
         this.drawCircle(x, y, r);
-        this.context2d.setLineDash([15, 15]);
+        //this.context2d.setLineDash([15, 15]);
         this.drawCircle(x, y, r / 2);
-        this.context2d.setLineDash([5, 10]);
+        this.context2d.setLineDash([15, 15]);
+        // this.context2d.setLineDash([5, 10]);
         this.drawCircle(x, y, r * 3 / 4);
         this.drawCircle(x, y, r / 4);
 
@@ -154,7 +200,6 @@ class gameViewLayer {
         this.context2d.stroke();
     }
 }
-
 
 class GameView {
     static htmlElement;
@@ -209,7 +254,7 @@ class GameView {
     static redraw() {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
-            this.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
+            this.drawOldShotTrajectories(currentGame.getLastShots());
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
@@ -271,19 +316,13 @@ class GameView {
             shots.forEach((shot, i) => {
                 if (shot != null) {
                     this.trajectoryLayer.drawTrajectory(
-                        shot.trajectory, this.alphaColour(shot.player.colour, i), OLD_TRAJECTORY_LINEWIDTH
+                        shot.trajectory,
+                        G.alphaColour(shot.ship.player.colour, G.getTrajectoryAlpha(i)),
+                        G.getTrajectoryWidth(i)
                     );
                 }
             });
         }
-    }
-
-    static alphaColour(colour, i) {
-        let MAX_ALPHA = 0.9;
-        let MIN_ALPHA = 0.1;
-        let alpha = Math.round((MIN_ALPHA + (i) * (MAX_ALPHA - MIN_ALPHA) / (OLD_SHOTS_LIMIT)) * 256);
-        let hex = alpha.toString(16);
-        return colour + hex;
     }
 
     static drawLevel(level) {
@@ -301,11 +340,19 @@ class GameView {
         };
     }
 
+    static crossoutShip(ship) {
+        this.shipLayer.crossoutShip(ship);
+    }
+
     static drawFCI(fci) {
         if (fci != null) {
             this.controlLayer.clear();
             this.controlLayer.drawFCI(fci);
         }
+    }
+
+    static clearControlLayer(){
+        this.controlLayer.clear();
     }
 }
 

@@ -1,12 +1,56 @@
 const TRAJECTORY_LINEWIDTH = 2;
 const OLD_TRAJECTORY_LINEWIDTH = 1.5;
 
-class Shot{
-    player;
+class Shot {
+    ship;
     trajectory;
-    constructor(player, firstPoint, weaponClass){
-        this.player = player;
-        this.trajectory = Trajectory.fromShot(firstPoint, weaponClass, currentGame.level.planets);
+    weapon;
+    #fired;
+    constructor(ship, firstPoint, weapon) {
+        this.ship = ship;
+        this.trajectory = null;
+        this.outcome = 0;
+        this.weapon = weapon;
+        this.#fired = false;
+        this.computeTrajectory(
+            firstPoint,
+            currentGame.level.planets,
+            currentGame.getOkShips()
+        );
+    }
+
+    computeTrajectory(fromPoint, planets, ships) {
+        let dt = 0.001;
+
+        let p = fromPoint;
+        p.vx *= this.weapon.v;
+        p.vy *= this.weapon.v;
+        let t = this.trajectory = new Trajectory([p]);
+
+        //calc first two points
+        this.trajectory.extend(planets, dt);
+
+        while (!(this.munitionLost()) && !(t.clippedPlanet(planets)) && !this.hitShip(ships, this.ship)) {
+            t.extend(planets, dt);
+        }
+
+    }
+
+    munitionLost() {
+        return this.trajectory.projectileExpired(this.weapon.projectileLife);
+    }
+
+    hitShip(ships, firingShip) {
+        let hitConfirmed = false;
+        let hitShip = this.trajectory.hitShip(ships);
+        if (!(this.#fired) && hitShip != firingShip) { this.#fired = true };
+        if (hitShip == firingShip ? this.#fired : hitShip != null) {
+            hitConfirmed = true;
+            hitShip.status = 1;
+            this.status = 1;
+            GameView.crossoutShip(hitShip);
+        }
+        return hitConfirmed;
     }
 }
 
@@ -16,32 +60,15 @@ class Trajectory {
     points = [];
     constructor(points) { if (points != null) { this.points = points; } }
 
-    static fromShot(fromPoint, weaponClass, planets) {
-        let dt = 0.001;
-
-        let p = fromPoint;
-        p.vx *= Weapon(weaponClass).v;
-        p.vy *= Weapon(weaponClass).v;
-        let t = new Trajectory([p]);
-
-        //calc first two points
-        t.extend(planets, dt);
-
-        while (!(t.projectileExpired(weaponClass)) && !(t.clippedPlanet(planets))) {
-            t.extend(planets, dt);
-        }
-        return t;
-    }
-
     extend(planets, dt) {
         let p = this.lastPoint();
         let acc = this.getAcceleration(planets);
-        
+
         let dx = p.vx * dt + 0.5 * acc.x * dt ** 2;
         let dy = p.vy * dt + 0.5 * acc.y * dt ** 2;
         let dvx = acc.x * dt;
         let dvy = acc.y * dt;
-        
+
         this.points.push(new TrajectoryPoint(
             p.x + dx,
             p.y + dy,
@@ -67,13 +94,17 @@ class Trajectory {
         return this.points.at(-1);
     }
 
-    projectileExpired(weaponClass) {
-        if (this.points.at(-1).t > Weapon(weaponClass).projectile_life) {
-            if (this.points.at(-2).t = Weapon(weaponClass).projectile_life) {
+    lastSegment() {
+        return new Segment(this.points.at(-2), this.points.at(-1))
+    }
+
+    projectileExpired(projectileLife) {
+        if (this.points.at(-1).t > projectileLife) {
+            if (this.points.at(-2).t = projectileLife) {
                 this.points.pop();
             } else {
-                this.points.at(-1).x += (this.points.at(-2).x - this.points.at(-1).x) * (this.points.at(-1).t - Weapon(weaponClass).projectile_life) / dt;
-                this.points.at(-1).y += (this.points.at(-2).y - this.points.at(-1).y) * (this.points.at(-1).t - Weapon(weaponClass).projectile_life) / dt;
+                this.points.at(-1).x += (this.points.at(-2).x - this.points.at(-1).x) * (this.points.at(-1).t - projectileLife) / dt;
+                this.points.at(-1).y += (this.points.at(-2).y - this.points.at(-1).y) * (this.points.at(-1).t - projectileLife) / dt;
             }
             return true;
         } else {
@@ -97,6 +128,20 @@ class Trajectory {
             }
         });
         return clipped;
+    }
+
+    hitShip(ships) {
+        let segment = this.lastSegment();
+        let x = segment.end.x;
+        let y = segment.end.y;
+
+        let hit = null;
+        ships.forEach(ship => {
+            if (hit == null && dist(ship.position.x, ship.position.y, x, y) <= ship.radius) {
+                hit = ship;
+            }
+        })
+        return hit;
     }
 }
 

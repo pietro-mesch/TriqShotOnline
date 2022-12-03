@@ -5,9 +5,12 @@ function fire() {
         currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
         currentGame.shots.push(fci.getCurrentShot());
         GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
-        currentGame.switchPlayer();
-        switchFireControl();
+        currentGame.endTurn();
     }
+}
+
+function clearFireControl(){
+    fci = null;
 }
 
 function switchFireControl() {
@@ -144,7 +147,7 @@ class FireControlInterface {
     };
 
     getCurrentShot(){
-        return new Shot(this.ship.player, fci.getFirstTrajectoryPoint(), fci.weapon)
+        return new Shot(this.ship, fci.getFirstTrajectoryPoint(), Weapon(fci.weapon));
     }
 
     trackPoint(x, y) {
