@@ -18,10 +18,14 @@ class Ship {
     position;
     player;
     lastFiringVector;
+    status;
+    radius;
     constructor(position, player) {
         this.position = position;
         this.player = player;
         this.lastFiringVector = null;
+        this.status = 0;
+        this.radius = 5;
     }
 
     getLastShot(shots) {
@@ -31,6 +35,14 @@ class Ship {
             }
         }
         return null;
+    }
+
+    statusString() {
+        switch (this.status) {
+            case 0: return "OK";
+            case 1: return "DESTROYED";
+            default: break;
+        }
     }
 }
 
@@ -101,6 +113,22 @@ class Game {
 
     getLastShots(count = OLD_SHOTS_LIMIT) {
         return new Array(count).concat(this.shots.slice(-count)).slice(-count);
+    }
+
+    getOkShips(){
+        return this.getShips(ship => ship.status == 0);
+    }
+
+    getShips(condition = x => true){
+        let ships = [];
+        this.#players.forEach(p => {
+            p.ships.forEach(s => {
+                if (condition(s)){
+                    ships.push(s);
+                }
+            })
+        });
+        return ships;
     }
 
     switchPlayer() {

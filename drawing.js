@@ -3,6 +3,22 @@ const GV_WIDTH = 1500;
 const GV_HEIGHT = GV_WIDTH / GV_ASPECT;
 const OLD_SHOTS_LIMIT = 20;
 
+class G {
+    static MAX_ALPHA = 0.8;
+    static MIN_ALPHA = 0.1
+    static getTrajectoryAlpha(i) {
+        return this.MIN_ALPHA + (i) * (this.MAX_ALPHA - this.MIN_ALPHA) / (OLD_SHOTS_LIMIT);
+    }
+
+    static getTrajectoryWidth(i) {
+        return OLD_TRAJECTORY_LINEWIDTH; // + (OLD_SHOTS_LIMIT - i <= 2 ? 1 : 0)
+    }
+
+    static alphaColour(colour, alpha) {
+        return colour + Math.round(alpha * 256).toString(16);
+    }
+}
+
 FCI_SETTINGS = {
     radius: 100
 }
@@ -59,7 +75,7 @@ class gameViewLayer {
     }
 
     drawShip(ship) {
-        let r = 5;
+        let r = ship.radius;
         let x = ship.position.x;
         let y = ship.position.y;
 
@@ -156,22 +172,6 @@ class gameViewLayer {
         this.context2d.moveTo(x, y - r);
         this.context2d.lineTo(x, y + r);
         this.context2d.stroke();
-    }
-}
-
-class G {
-    static MAX_ALPHA = 0.8;
-    static MIN_ALPHA = 0.1
-    static getTrajectoryAlpha(i) {
-        return this.MIN_ALPHA + (i) * (this.MAX_ALPHA - this.MIN_ALPHA) / (OLD_SHOTS_LIMIT);
-    }
-
-    static getTrajectoryWidth(i) {
-        return OLD_TRAJECTORY_LINEWIDTH; // + (OLD_SHOTS_LIMIT - i <= 2 ? 1 : 0)
-    }
-
-    static alphaColour(colour, alpha) {
-        return colour + Math.round(alpha * 256).toString(16);
     }
 }
 
