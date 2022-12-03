@@ -144,7 +144,7 @@ class FireControlInterface {
     };
 
     getCurrentShot(){
-        return new Shot(this.ship.player, fci.getFirstTrajectoryPoint(), fci.weapon)
+        return new Shot(this.ship, fci.getFirstTrajectoryPoint(), fci.weapon)
     }
 
     trackPoint(x, y) {

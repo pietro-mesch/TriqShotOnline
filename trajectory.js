@@ -2,10 +2,10 @@ const TRAJECTORY_LINEWIDTH = 2;
 const OLD_TRAJECTORY_LINEWIDTH = 1.5;
 
 class Shot{
-    player;
+    ship;
     trajectory;
-    constructor(player, firstPoint, weaponClass){
-        this.player = player;
+    constructor(ship, firstPoint, weaponClass){
+        this.ship = ship;
         this.trajectory = Trajectory.fromShot(firstPoint, weaponClass, currentGame.level.planets);
     }
 }

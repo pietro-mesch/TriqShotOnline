@@ -23,6 +23,15 @@ class Ship {
         this.player = player;
         this.lastFiringVector = null;
     }
+
+    getLastShot(shots) {
+        for (let i = shots.length - 1; i >=0; i--){
+            if (shots[i] != null && shots[i].ship == this){
+                return shots[i];
+            }
+        }
+        return null;
+    }
 }
 
 class Player {
@@ -90,7 +99,7 @@ class Game {
         return Array.from(Array(numPlayers), (p, i) => p = players[indices[i]]);
     }
 
-    getLastShots(count) {
+    getLastShots(count = OLD_SHOTS_LIMIT) {
         return new Array(count).concat(this.shots.slice(-count)).slice(-count);
     }
 
