@@ -78,6 +78,15 @@ class Trajectory {
         );
     }
 
+    untilTime(time) {
+        let clippedTrajectory = new Trajectory([this.points[0]]);
+        let i = 1;
+        while (i < this.points.length && this.points[i].t < time) {
+            clippedTrajectory.points.push(this.points[i++])
+        };
+        return clippedTrajectory;
+    }
+
     getAcceleration(planets) {
         let x = this.lastPoint().x;
         let y = this.lastPoint().y;

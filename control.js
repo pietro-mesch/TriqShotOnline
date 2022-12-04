@@ -1,15 +1,16 @@
 document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPropagation(); keyDown(e); }, { passive: false });
 
-function fire() {
+async function fire() {
     if (fci != null) {
         currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
-        currentGame.shots.push(fci.getCurrentShot());
-        GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
+        let shot = fci.getCurrentShot();
+        await GameView.animateShot(shot)
+        currentGame.shots.push(shot);
         currentGame.endTurn();
     }
 }
 
-function clearFireControl(){
+function clearFireControl() {
     fci = null;
 }
 
@@ -146,7 +147,7 @@ class FireControlInterface {
             0)
     };
 
-    getCurrentShot(){
+    getCurrentShot() {
         return new Shot(this.ship, fci.getFirstTrajectoryPoint(), Weapon(fci.weapon));
     }
 

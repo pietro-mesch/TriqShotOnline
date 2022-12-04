@@ -16,6 +16,10 @@ function newGame() {
     currentGame.switchPlayer();
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 class Ship {
     position;
     player;
@@ -140,6 +144,7 @@ class Game {
         let standing = this.getStandingPlayers();
         if (standing.length > 1) {
             currentGame.switchPlayer();
+            GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
             switchFireControl();
         } else {
             this.endGame(standing);

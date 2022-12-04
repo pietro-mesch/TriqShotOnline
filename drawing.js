@@ -225,13 +225,14 @@ class GameView {
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, null);
-        this.animationLayer = this.#createLayer(SHIP_LAYER_ID, null);
+        this.animationLayer = this.#createLayer(ANIMATION_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
 
         this.layers = [
             this.planetLayer,
             this.trajectoryLayer,
+            this.animationLayer,
             this.shipLayer,
             this.controlLayer
         ];
@@ -311,6 +312,26 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
+    static animateShot(shot) {
+        return new Promise(resolve => {
+            // sleep(1000).then(() => {
+            //     this.animationLayer.drawTrajectory(
+            //         shot.trajectory,
+            //         "#FFFFFF",
+            //         4
+            //     );
+            //     resolve();
+            // });
+            this.animationLayer.clear();
+            this.animationLayer.drawTrajectory(
+                    shot.trajectory.untilTime(2),
+                    "#FFFFFF",
+                    4
+                );
+            resolve();
+        });
+    }
+
     static drawOldShotTrajectories(shots) {
         if (currentGame != null) {
             this.trajectoryLayer.clear();
@@ -352,7 +373,7 @@ class GameView {
         }
     }
 
-    static clearControlLayer(){
+    static clearControlLayer() {
         this.controlLayer.clear();
     }
 }
