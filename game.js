@@ -1,7 +1,7 @@
 const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
 const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 const NUM_PLAYERS = 2;
-const NUM_SHIPS = 1;
+const NUM_SHIPS = 2;
 
 let currentGame = null;
 

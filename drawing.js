@@ -30,6 +30,8 @@ const SHIP_LAYER_ID = "shipLayer";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
 
+const ANIMATION_LAYER_ID = "animationLayer";
+
 const CONTROL_LAYER_ID = "controlLayer";
 
 class gameViewLayer {
@@ -86,16 +88,12 @@ class gameViewLayer {
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
-        // switch (ship.status) {
-        //     case 0:
-        //         this.context2d.fill();
-        //         break;
-        //     case 1:
-        //         this.context2d.closePath();
-        //         this.context2d.stroke();
-        //     default:
-        //         break;
-        // }
+        switch (ship.status) {
+            case 0: break;
+            case 1:
+                this.crossoutShip(ship);
+            default: break;
+        }
     }
 
     crossoutShip(ship) {
@@ -205,6 +203,7 @@ class GameView {
     static htmlElement;
     static planetLayer;
     static trajectoryLayer;
+    static animationLayer;
     static shipLayer;
     static controlLayer;
 
@@ -226,6 +225,7 @@ class GameView {
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, null);
+        this.animationLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
 
@@ -255,6 +255,7 @@ class GameView {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
             this.drawOldShotTrajectories(currentGame.getLastShots());
+            this.animationLayer.clear();
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
