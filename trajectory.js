@@ -48,7 +48,6 @@ class Shot {
             hitConfirmed = true;
             hitShip.status = 1;
             this.status = 1;
-            GameView.crossoutShip(hitShip);
         }
         return hitConfirmed;
     }
@@ -76,6 +75,15 @@ class Trajectory {
             p.vy + dvy,
             p.t + dt)
         );
+    }
+
+    untilTime(time) {
+        let clippedTrajectory = new Trajectory([this.points[0]]);
+        let i = 1;
+        while (i < this.points.length && this.points[i].t < time) {
+            clippedTrajectory.points.push(this.points[i++])
+        };
+        return clippedTrajectory;
     }
 
     getAcceleration(planets) {

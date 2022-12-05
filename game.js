@@ -1,7 +1,7 @@
 const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
 const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 const NUM_PLAYERS = 2;
-const NUM_SHIPS = 1;
+const NUM_SHIPS = 2;
 
 let currentGame = null;
 
@@ -14,6 +14,10 @@ function newGame() {
     GameView.redraw();
     currentGame.deployShips();
     currentGame.switchPlayer();
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 class Ship {
@@ -140,6 +144,7 @@ class Game {
         let standing = this.getStandingPlayers();
         if (standing.length > 1) {
             currentGame.switchPlayer();
+            GameView.drawOldShotTrajectories(currentGame.getLastShots(OLD_SHOTS_LIMIT));
             switchFireControl();
         } else {
             this.endGame(standing);

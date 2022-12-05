@@ -30,6 +30,8 @@ const SHIP_LAYER_ID = "shipLayer";
 
 const TRAJECTORY_LAYER_ID = "trajectoryLayer";
 
+const ANIMATION_LAYER_ID = "animationLayer";
+
 const CONTROL_LAYER_ID = "controlLayer";
 
 class gameViewLayer {
@@ -86,16 +88,12 @@ class gameViewLayer {
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
-        // switch (ship.status) {
-        //     case 0:
-        //         this.context2d.fill();
-        //         break;
-        //     case 1:
-        //         this.context2d.closePath();
-        //         this.context2d.stroke();
-        //     default:
-        //         break;
-        // }
+        switch (ship.status) {
+            case 0: break;
+            case 1:
+                this.crossoutShip(ship);
+            default: break;
+        }
     }
 
     crossoutShip(ship) {
@@ -205,6 +203,8 @@ class GameView {
     static htmlElement;
     static planetLayer;
     static trajectoryLayer;
+    static animationLayer;
+    static animationStartTime;
     static shipLayer;
     static controlLayer;
 
@@ -226,12 +226,16 @@ class GameView {
 
         this.planetLayer = this.#createLayer(PLANET_LAYER_ID, PLANET_COLOUR);
         this.trajectoryLayer = this.#createLayer(TRAJECTORY_LAYER_ID, null);
+        this.animationLayer = this.#createLayer(ANIMATION_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
+
+        this.animationStartTime = null;
 
         this.layers = [
             this.planetLayer,
             this.trajectoryLayer,
+            this.animationLayer,
             this.shipLayer,
             this.controlLayer
         ];
@@ -255,6 +259,7 @@ class GameView {
         if (currentGame != null) {
             this.drawLevel(currentGame.level);
             this.drawOldShotTrajectories(currentGame.getLastShots());
+            this.animationLayer.clear();
             this.drawShips(currentGame);
             this.drawFCI(fci);
         }
@@ -310,6 +315,56 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
+    static startAnimation() { GameView.animationStartTime = Date.now() }
+    static animationTime() { return (Date.now() - GameView.animationStartTime) / 1000 }
+    static stopAnimation() { GameView.animationStartTime = null }
+    static waitForAnimation() {
+        return new Promise(resolve => {
+            let a = 0;
+            while (GameView.animationStartTime != null) {
+                a++
+            };
+            resolve();
+        })
+    }
+
+    static animateShot(shot) {
+        return new Promise(resolve => {
+            GameView.startAnimation();
+            GameView.drawTrajectoryLoop(shot);
+            //GameView.waitForAnimation();
+            resolve();
+        });
+    }
+
+    static drawTrajectoryLoop(shot) {
+        return new Promise(resolve => {
+            let tmax = shot.trajectory.lastPoint().t;
+            // let start = Date.now()
+            // let fps = 25;
+            // let fd = 1 / fps;
+            // let tprev = 0;
+            let t = GameView.animationTime();
+            this.animationLayer.clear();
+            this.animationLayer.drawTrajectory(
+                shot.trajectory.untilTime(t),
+                shot.ship.player.colour,
+                2.5
+            );
+            if (t < tmax) {
+                requestAnimationFrame(() => GameView.drawTrajectoryLoop(shot).then(() => { }));
+            } else {
+                GameView.stopAnimation();
+                requestAnimationFrame(() => {
+                    currentGame.shots.push(shot);
+                    currentGame.endTurn();
+                    GameView.redraw();
+                });
+            }
+            resolve();
+        })
+    }
+
     static drawOldShotTrajectories(shots) {
         if (currentGame != null) {
             this.trajectoryLayer.clear();
@@ -344,6 +399,13 @@ class GameView {
         this.shipLayer.crossoutShip(ship);
     }
 
+    static hideFCI() {
+        if (fci != null) {
+            fci = null;
+            this.controlLayer.clear();
+        }
+    }
+
     static drawFCI(fci) {
         if (fci != null) {
             this.controlLayer.clear();
@@ -351,7 +413,7 @@ class GameView {
         }
     }
 
-    static clearControlLayer(){
+    static clearControlLayer() {
         this.controlLayer.clear();
     }
 }

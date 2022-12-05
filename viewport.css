@@ -36,6 +36,10 @@
     position: absolute;
 }
 
+#animationLayer {
+    position: absolute;
+}
+
 #trajectoryLayer {
     position: absolute;
 }
