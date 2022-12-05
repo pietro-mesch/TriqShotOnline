@@ -30,14 +30,33 @@ class Shot {
         //calc first two points
         this.trajectory.extend(planets, dt);
 
-        while (!(this.munitionLost()) && !(t.clippedPlanet(planets)) && !this.hitShip(ships, this.ship)) {
+        while (!(this.munitionLost()) && !(this.hitPlanet(planets)) && !this.hitShip(ships, this.ship)) {
             t.extend(planets, dt);
         }
-
+        if (this.status == 0) {
+            this.trimTrajectory(GameView.getBoundsBox());
+        }
     }
 
     munitionLost() {
-        return this.trajectory.projectileExpired(this.weapon.projectileLife);
+        let lost = this.trajectory.projectileExpired(this.weapon.projectileLife);
+        this.status = (lost ? 0 : this.status);
+        return lost;
+    }
+
+    trimTrajectory(box) {
+        for (let i = 0; i < this.trajectory.points.length; i++) {
+            let p = this.trajectory.points[i];
+            if (p.x < box.xmin || p.y < box.ymin || p.x > box.xmax || p.y > box.ymax) {
+                this.trajectory.points.length = i;
+            };
+        }
+    }
+
+    hitPlanet(planets) {
+        let hit = this.trajectory.hitPlanet(planets);
+        this.status = (hit ? 2 : this.status);
+        return hit;
     }
 
     hitShip(ships, firingShip) {
@@ -120,7 +139,7 @@ class Trajectory {
         }
     }
 
-    clippedPlanet(planets) {
+    hitPlanet(planets) {
         let clipped = false;
         let x = this.lastPoint().x;
         let y = this.lastPoint().y;
