@@ -299,6 +299,10 @@ class GameView {
         );
     }
 
+    static getBoundsBox() {
+        return new Box(- GV_WIDTH, -GV_HEIGHT, 2 * GV_WIDTH, 2 * GV_HEIGHT);
+    }
+
     static getScaledCoordinates(window_x, window_y) {
         let rect = this.htmlElement.getBoundingClientRect();
         let x = (window_x - rect.left) / GameView.dimensions.scale;
@@ -340,10 +344,6 @@ class GameView {
     static drawTrajectoryLoop(shot) {
         return new Promise(resolve => {
             let tmax = shot.trajectory.lastPoint().t;
-            // let start = Date.now()
-            // let fps = 25;
-            // let fd = 1 / fps;
-            // let tprev = 0;
             let t = GameView.animationTime();
             this.animationLayer.clear();
             this.animationLayer.drawTrajectory(
