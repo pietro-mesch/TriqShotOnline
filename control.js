@@ -4,9 +4,8 @@ async function fire() {
     if (fci != null) {
         currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
         let shot = fci.getCurrentShot();
-        await GameView.animateShot(shot)
-        currentGame.shots.push(shot);
-        currentGame.endTurn();
+        GameView.hideFCI();
+        await GameView.animateShot(shot);
     }
 }
 

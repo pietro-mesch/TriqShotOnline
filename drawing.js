@@ -204,6 +204,7 @@ class GameView {
     static planetLayer;
     static trajectoryLayer;
     static animationLayer;
+    static animationStartTime;
     static shipLayer;
     static controlLayer;
 
@@ -228,6 +229,8 @@ class GameView {
         this.animationLayer = this.#createLayer(ANIMATION_LAYER_ID, null);
         this.shipLayer = this.#createLayer(SHIP_LAYER_ID, null);
         this.controlLayer = this.#createLayer(CONTROL_LAYER_ID, null);
+
+        this.animationStartTime = null;
 
         this.layers = [
             this.planetLayer,
@@ -312,24 +315,54 @@ class GameView {
 
     static drawPlanet(p) { this.planetLayer.drawPlanet(p); }
 
+    static startAnimation() { GameView.animationStartTime = Date.now() }
+    static animationTime() { return (Date.now() - GameView.animationStartTime) / 1000 }
+    static stopAnimation() { GameView.animationStartTime = null }
+    static waitForAnimation() {
+        return new Promise(resolve => {
+            let a = 0;
+            while (GameView.animationStartTime != null) {
+                a++
+            };
+            resolve();
+        })
+    }
+
     static animateShot(shot) {
         return new Promise(resolve => {
-            // sleep(1000).then(() => {
-            //     this.animationLayer.drawTrajectory(
-            //         shot.trajectory,
-            //         "#FFFFFF",
-            //         4
-            //     );
-            //     resolve();
-            // });
-            this.animationLayer.clear();
-            this.animationLayer.drawTrajectory(
-                    shot.trajectory.untilTime(2),
-                    "#FFFFFF",
-                    4
-                );
+            GameView.startAnimation();
+            GameView.drawTrajectoryLoop(shot);
+            //GameView.waitForAnimation();
             resolve();
         });
+    }
+
+    static drawTrajectoryLoop(shot) {
+        return new Promise(resolve => {
+            let tmax = shot.trajectory.lastPoint().t;
+            // let start = Date.now()
+            // let fps = 25;
+            // let fd = 1 / fps;
+            // let tprev = 0;
+            let t = GameView.animationTime();
+            this.animationLayer.clear();
+            this.animationLayer.drawTrajectory(
+                shot.trajectory.untilTime(t),
+                shot.ship.player.colour,
+                2.5
+            );
+            if (t < tmax) {
+                requestAnimationFrame(() => GameView.drawTrajectoryLoop(shot).then(() => { }));
+            } else {
+                GameView.stopAnimation();
+                requestAnimationFrame(() => {
+                    currentGame.shots.push(shot);
+                    currentGame.endTurn();
+                    GameView.redraw();
+                });
+            }
+            resolve();
+        })
     }
 
     static drawOldShotTrajectories(shots) {
@@ -364,6 +397,13 @@ class GameView {
 
     static crossoutShip(ship) {
         this.shipLayer.crossoutShip(ship);
+    }
+
+    static hideFCI() {
+        if (fci != null) {
+            fci = null;
+            this.controlLayer.clear();
+        }
     }
 
     static drawFCI(fci) {
