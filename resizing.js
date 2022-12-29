@@ -1,4 +1,4 @@
-const TOOLBAR_HEIGHT = 100;
+const TOOLBAR_HEIGHT = 65;
 
 function resizeComponents() {
     resizeGameView();

@@ -9,10 +9,26 @@
 </head>
 
 <body onload="resizeComponents()" onresize="resizeComponents()">
-    <div>
+    <div class="tq_toolbar">
         <button class="tq_button" onclick="newGame()"> New Game </button>
-        <button class="tq_button" onclick="switchFireControl()"> FIRE CONTROL </button>
-        <button class="tq_button" onclick="fire()">Fire!</button>
+        <div class="tq_slidercontainer">
+            <div>PLANETS</div>
+            <input type="range" min="1" max="5" value="3" class="tq_slider" id="planetSlider">
+        </div>
+        <!-- <button class="tq_button" onclick="switchFireControl()"> Select Ship </button> -->
+        <!-- <button class="tq_button" onclick="fire()">Fire!</button> -->
+        <table class="tq_table" id="keyBindingTable">
+            <tr>
+              <td>LEFT/RIGHT or CLICK : Adjust Angle </td>
+              <td>CTRL : Fine </td>
+              <td>TAB : Select Ship</td>
+            </tr>
+            <tr>
+                <td>UP/DOWN or WHEEL: Adjust Velocity</td>
+                <td>SHIFT : Coarse </td>
+                <td>SPACE : FIRE! </td>
+            </tr>
+          </table> 
     </div>
 
     <div id="gameView"></div>
