@@ -47,13 +47,14 @@
 }
 
 .tq_slidercontainer{
-    width: 15%;
+    width: 10%;
     text-align: center;
     display: inline-block;
     font-size: 16px;
     font-family: block-font;
     font-weight: bold;
-    padding: 0;
+    padding-left: 10px;
+    padding-right: 10px;
     vertical-align: bottom;
 }
 
@@ -72,6 +73,8 @@
 .tq_slider::-webkit-slider-thumb {
     -webkit-appearance: none; /* Override default look */
     appearance: none;
+    border-radius: 0;
+    border: none;
     width: 5px; /* Set a specific slider handle width */
     height: 20px; /* Slider handle height */
     background: limegreen; /* Green background */
@@ -81,6 +84,8 @@
   .tq_slider::-moz-range-thumb {
     width: 5px; /* Set a specific slider handle width */
     height: 20px; /* Slider handle height */
+    border: none;
+    border-radius: 0;
     background: limegreen; /* Green background */
     cursor: pointer; /* Cursor on hover */
   }

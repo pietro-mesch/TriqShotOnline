@@ -12,8 +12,12 @@
     <div class="tq_toolbar">
         <button class="tq_button" onclick="newGame()"> New Game </button>
         <div class="tq_slidercontainer">
-            <div>PLANETS</div>
-            <input type="range" min="1" max="5" value="3" class="tq_slider" id="planetSlider">
+            <div id="planetLabel">PLANETS: 3</div>
+            <input oninput="inputPlanets()" type="range" min="1" max="5" value="3" class="tq_slider" id="planetSlider">
+        </div>
+        <div class="tq_slidercontainer">
+            <div id="shipLabel">SHIPS: 2</div>
+            <input oninput="inputShips()" type="range" min="2" max="4" value="2" class="tq_slider" id="shipSlider">
         </div>
         <!-- <button class="tq_button" onclick="switchFireControl()"> Select Ship </button> -->
         <!-- <button class="tq_button" onclick="fire()">Fire!</button> -->
