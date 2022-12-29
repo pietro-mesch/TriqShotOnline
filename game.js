@@ -9,7 +9,13 @@ function Phys() {
     return { G: 100 }
 }
 
+function initPage() {
+    resizeComponents();
+    newGame();
+}
+
 function newGame() {
+    GameView.hideFCI();
     currentGame = new Game(NUM_PLAYERS, NUM_SHIPS);
     GameView.redraw();
     currentGame.deployShips();
