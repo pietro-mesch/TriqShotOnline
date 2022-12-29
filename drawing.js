@@ -383,7 +383,9 @@ class GameView {
     static drawLevel(level) {
         this.planetLayer.clear();
         this.planetLayer.drawFrame();
-        this.drawPlanet(level.planets[0]);
+        level.planets.forEach(p => {
+            this.drawPlanet(p);
+        });
     }
 
     static drawShips(game) {

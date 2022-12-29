@@ -17,7 +17,8 @@ function newGame() {
     GameView.hideFCI();
     currentGame = new Game(
         NUM_PLAYERS,
-        document.getElementById("shipSlider").value
+        document.getElementById("shipSlider").value,
+        document.getElementById("planetSlider").value
     );
     GameView.redraw();
     currentGame.deployShips();
@@ -105,10 +106,10 @@ class Game {
     shots;
     #players;
     #playerOrderIndex;
-    constructor(numPlayers, numShips) {
+    constructor(numPlayers, numShips, numPlanets) {
         this.numPlayers = numPlayers;
         this.numShips = numShips;
-        this.level = new Level();
+        this.level = new Level(numPlanets);
         this.shots = [];
         this.#players = this.getActivePlayerArray(numPlayers);
         this.#playerOrderIndex = -1;
