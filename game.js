@@ -1,7 +1,6 @@
 const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
 const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 const NUM_PLAYERS = 2;
-const NUM_SHIPS = 2;
 
 let currentGame = null;
 
@@ -16,7 +15,10 @@ function initPage() {
 
 function newGame() {
     GameView.hideFCI();
-    currentGame = new Game(NUM_PLAYERS, NUM_SHIPS);
+    currentGame = new Game(
+        NUM_PLAYERS,
+        document.getElementById("shipSlider").value
+    );
     GameView.redraw();
     currentGame.deployShips();
     currentGame.switchPlayer();
