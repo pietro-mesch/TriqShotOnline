@@ -36,13 +36,23 @@ class Ship {
     player;
     lastFiringVector;
     status;
+    heat;
     radius;
     constructor(position, player) {
         this.position = position;
         this.player = player;
         this.lastFiringVector = null;
         this.status = 0;
+        this.heat = 0;
         this.radius = 5;
+    }
+    statusString() {
+        switch (this.status) {
+            case 0: return "OK";
+            case 1: return "DESTROYED";
+            case 2: return "IMMOLATED"
+            default: break;
+        }
     }
 
     getLastShot(shots) {
@@ -54,12 +64,21 @@ class Ship {
         return null;
     }
 
-    statusString() {
-        switch (this.status) {
-            case 0: return "OK";
-            case 1: return "DESTROYED";
-            default: break;
-        }
+    fire(){
+        this.status = Math.random() < this.currentRisk() ? 2 : 0;
+        return this.status;
+    }
+
+    currentRisk(){
+        return this.heat * 0.15;
+    }
+
+    increaseHeat() {
+        this.heat = Math.min(4, this.heat + 1);
+    }
+
+    decreaseHeat() {
+        this.heat = Math.max(0, this.heat - 1);
     }
 }
 
@@ -81,7 +100,7 @@ class Player {
 
     selectNextShip() {
         this.#selectedShip = this.ships.concat(this.ships).findIndex((ship, i) => {
-            return i > this.#selectedShip && ship.status != 1
+            return i > this.#selectedShip && ship.status == 0
         }) % this.ships.length;
         // if (++this.#selectedShip >= this.ships.length) { this.#selectedShip = 0 };
         return this.ships[this.#selectedShip];
@@ -163,7 +182,7 @@ class Game {
     }
 
     getStandingPlayers() {
-        return this.#players.filter(player => player.ships.some(ship => ship.status != 1))
+        return this.#players.filter(player => player.ships.some(ship => ship.status == 0))
     }
 
     switchPlayer() {
@@ -193,7 +212,7 @@ class Game {
         GameView.drawShips(this);
     }
 
-    static shipPositionOk(position, ships, planets){
+    static shipPositionOk(position, ships, planets) {
         return (
             !planets.some(p => dist(p.x, p.y, position.x, position.y) < p.radius) &&
             !ships.some(s => dist(s.position.x, s.position.y, position.x, position.y) < SHIP_GAP)

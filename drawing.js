@@ -88,11 +88,33 @@ class gameViewLayer {
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
+        this.drawHeatIndicators(ship);
         switch (ship.status) {
             case 0: break;
             case 1:
                 this.crossoutShip(ship);
+                break;
+            case 2:
+                this.immolateShip(ship);
+                break;
             default: break;
+        }
+    }
+
+    drawHeatIndicators(ship) {
+        if (ship.heat > 0) {
+            let x = ship.position.x;
+            let y = ship.position.y;
+            let d = 0.5;
+            for (let i = 1; i <= ship.heat; i++) {
+                let r = ship.radius * (1 + i * d);
+                this.context2d.beginPath();
+                this.context2d.moveTo(x, y - 2 * r);
+                this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
+                this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
+                this.context2d.closePath();
+                this.context2d.stroke();
+            }
         }
     }
 
@@ -108,6 +130,24 @@ class gameViewLayer {
         this.context2d.stroke();
         this.context2d.moveTo(x - r * Math.SQRT2 / 2, y + r * Math.SQRT2 / 2);
         this.context2d.lineTo(x + r * Math.SQRT2 / 2, y - r * Math.SQRT2 / 2);
+        this.context2d.stroke();
+    }
+
+    immolateShip(ship) {
+        let r = ship.radius * 5;
+        let x = ship.position.x;
+        let y = ship.position.y;
+
+        this.context2d.strokeStyle = ship.player.colour;
+        this.context2d.beginPath();
+        this.context2d.moveTo(x - r * Math.sqrt(3) / 2, y - r / 2);
+        this.context2d.lineTo(x, y);
+        this.context2d.stroke();
+        this.context2d.moveTo(x + r * Math.sqrt(3) / 2, y - r / 2);
+        this.context2d.lineTo(x, y);
+        this.context2d.stroke();
+        this.context2d.moveTo(x, y + r);
+        this.context2d.lineTo(x, y);
         this.context2d.stroke();
     }
 
@@ -399,6 +439,10 @@ class GameView {
 
     static crossoutShip(ship) {
         this.shipLayer.crossoutShip(ship);
+    }
+
+    static immolateShip(ship) {
+        this.shipLayer.immolateShip(ship);
     }
 
     static hideFCI() {
