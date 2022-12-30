@@ -1,7 +1,7 @@
 const SHIP_BOX_SIZE = { x: 0.2, y: 0.9 };
 const PLANET_BOX_SIZE = { x: 0.7, y: 1 };
 const NUM_PLAYERS = 2;
-const NUM_SHIPS = 2;
+const SHIP_GAP = 100;
 
 let currentGame = null;
 
@@ -9,8 +9,18 @@ function Phys() {
     return { G: 100 }
 }
 
+function initPage() {
+    resizeComponents();
+    newGame();
+}
+
 function newGame() {
-    currentGame = new Game(NUM_PLAYERS, NUM_SHIPS);
+    GameView.hideFCI();
+    currentGame = new Game(
+        NUM_PLAYERS,
+        document.getElementById("shipSlider").value,
+        document.getElementById("planetSlider").value
+    );
     GameView.redraw();
     currentGame.deployShips();
     currentGame.switchPlayer();
@@ -76,9 +86,9 @@ class Player {
         return this.ships[this.#selectedShip];
     }
 
-    deployShip(playerShipBox) {
+    deployShip(position) {
         this.ships.push(
-            new Ship(playerShipBox.randomPoint(), this)
+            new Ship(position, this)
         );
     }
 }
@@ -97,10 +107,10 @@ class Game {
     shots;
     #players;
     #playerOrderIndex;
-    constructor(numPlayers, numShips) {
+    constructor(numPlayers, numShips, numPlanets) {
         this.numPlayers = numPlayers;
         this.numShips = numShips;
-        this.level = new Level();
+        this.level = new Level(numPlanets);
         this.shots = [];
         this.#players = this.getActivePlayerArray(numPlayers);
         this.#playerOrderIndex = -1;
@@ -171,11 +181,22 @@ class Game {
         players.forEach(p => p.ships = []);
         for (let n = 0; n < this.numShips; n++) {
             this.#players.forEach((p, i) => {
-                p.deployShip(GameView.getPlayerDeploymentBox(i));
+                var position = GameView.getPlayerDeploymentBox(i).randomPoint();
+                while (!Game.shipPositionOk(position, this.getShips(), this.level.planets)) {
+                    position = GameView.getPlayerDeploymentBox(i).randomPoint();
+                }
+                p.deployShip(position);
             });
         }
 
         GameView.drawShips(this);
+    }
+
+    static shipPositionOk(position, ships, planets){
+        return (
+            !planets.some(p => dist(p.x, p.y, position.x, position.y) < p.radius) &&
+            !ships.some(s => dist(s.position.x, s.position.y, position.x, position.y) < SHIP_GAP)
+        )
     }
 
 }

@@ -1,3 +1,27 @@
+.tq_toolbar{
+    color: limegreen;
+}
+
+.tq_table{
+    color: limegreen;
+    display: inline-table;
+    font-family: block-font;
+    font-weight: bold;
+}
+
+.tq_table, th, td{
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
+#keyBindingTable{
+    margin-right: 0;
+    margin-left: auto;
+    
+}
+
 .tq_button {
     background-color: transparent;
     /* Green */
@@ -21,3 +45,47 @@
     border: solid 2px green;
     color: green;
 }
+
+.tq_slidercontainer{
+    width: 10%;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    font-family: block-font;
+    font-weight: bold;
+    padding-left: 10px;
+    padding-right: 10px;
+    vertical-align: bottom;
+}
+
+.tq_slider{
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 20px; /* Specified height */
+    background: #004f0c; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+}
+
+.tq_slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    border-radius: 0;
+    border: none;
+    width: 5px; /* Set a specific slider handle width */
+    height: 20px; /* Slider handle height */
+    background: limegreen; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }
+  
+  .tq_slider::-moz-range-thumb {
+    width: 5px; /* Set a specific slider handle width */
+    height: 20px; /* Slider handle height */
+    border: none;
+    border-radius: 0;
+    background: limegreen; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+  }

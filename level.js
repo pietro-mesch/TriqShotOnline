@@ -2,6 +2,7 @@ const PLANET_THICKNESS = 3;
 const PLANET_MIN_RADIUS = 25;
 const PLANET_MAX_RADIUS = 150;
 const PLANET_DENSITY = 10000;
+const PLANET_GAP = 1.2;
 
 class Planet {
     constructor(position) {
@@ -13,7 +14,38 @@ class Planet {
 }
 
 class Level {
-    constructor() {
-        this.planets = [new Planet(GameView.getPlanetBox().randomPoint())];
+    constructor(numPlanets) {
+        this.planets = this.generatePlanets(numPlanets);
+    }
+
+    generatePlanets(numPlanets) {
+        var planets = [];
+        var p = null;
+        for (let i = 0; i < numPlanets; i++) {
+            p = new Planet(GameView.getPlanetBox().randomPoint());
+            while (!this.planetOk(p, planets)) {
+                p = new Planet(GameView.getPlanetBox().randomPoint());
+            }
+            planets.push(p);
+        }
+        return planets;
+    }
+
+    planetOk(p1, pp) {
+        var check = true;
+        if (p1 == null) {
+            check = false;
+        } else {
+            pp.forEach(p2 => {
+                if (this.planetsTouch(p1, p2)) {
+                    check = false;
+                };
+            });
+        }
+        return check;
+    }
+
+    planetsTouch(p1, p2) {
+        return dist(p1.x, p1.y, p2.x, p2.y) < (p1.radius + p2.radius) * PLANET_GAP;
     }
 }

@@ -110,6 +110,18 @@ function keyDown(keyDownEvent) {
 
 }
 
+function inputPlanets() {
+    var slider = document.getElementById("planetSlider");
+    var label = document.getElementById("planetLabel");
+    label.textContent = "PLANETS: " + slider.value;
+}
+
+function inputShips() {
+    var slider = document.getElementById("shipSlider");
+    var label = document.getElementById("shipLabel");
+    label.textContent = "SHIPS: " + slider.value;
+}
+
 let fci = null;
 
 class FiringVector {
