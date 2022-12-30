@@ -2,8 +2,7 @@ document.addEventListener("keydown", function (e) { e.preventDefault(); e.stopPr
 
 async function fire() {
     if (fci != null) {
-        currentGame.getActivePlayer().getSelectedShip().lastFiringVector = fci.getCurrentFiringVector();
-        let shot = fci.getCurrentShot();
+        let shot = fci.fire();
         GameView.hideFCI();
         await GameView.animateShot(shot);
     }
@@ -157,6 +156,11 @@ class FireControlInterface {
             - this.v * Math.sin(this.a),
             0)
     };
+
+    fire(){
+        this.ship.lastFiringVector = fci.getCurrentFiringVector();
+        return this.getCurrentShot();
+    }
 
     getCurrentShot() {
         return new Shot(this.ship, fci.getFirstTrajectoryPoint(), Weapon(fci.weapon));

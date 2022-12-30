@@ -36,12 +36,14 @@ class Ship {
     player;
     lastFiringVector;
     status;
+    risk;
     radius;
     constructor(position, player) {
         this.position = position;
         this.player = player;
         this.lastFiringVector = null;
         this.status = 0;
+        this.risk=0;
         this.radius = 5;
     }
 
