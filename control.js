@@ -137,7 +137,7 @@ class FireControlInterface {
             this.a = ship.lastFiringVector.a;
             this.v = ship.lastFiringVector.v;
         } else {
-            this.a = angle(ship.position.x,ship.position.y,GameView.dimensions.width/2,GameView.dimensions.height/2);
+            this.a = angle(ship.position.x, ship.position.y, GameView.dimensions.width / 2, GameView.dimensions.height / 2);
             this.v = 0.4;
         };
         this.trackingMouse = false;
@@ -157,9 +157,13 @@ class FireControlInterface {
             0)
     };
 
-    fire(){
+    fire() {
         this.ship.lastFiringVector = fci.getCurrentFiringVector();
-        this.ship.increaseHeat();
+        if (this.ship.fire() == 2) {
+            GameView.immolateShip(this.ship);
+        } else {
+            this.ship.increaseHeat();
+        }
         this.ship.player.ships.filter(s => (!(s == this.ship) && s.status == 0)).forEach(s => s.decreaseHeat());
         return this.getCurrentShot();
     }

@@ -50,6 +50,7 @@ class Ship {
         switch (this.status) {
             case 0: return "OK";
             case 1: return "DESTROYED";
+            case 2: return "IMMOLATED"
             default: break;
         }
     }
@@ -61,6 +62,15 @@ class Ship {
             }
         }
         return null;
+    }
+
+    fire(){
+        this.status = Math.random() < this.currentRisk() ? 2 : 0;
+        return this.status;
+    }
+
+    currentRisk(){
+        return this.heat * 0.15;
     }
 
     increaseHeat() {
@@ -90,7 +100,7 @@ class Player {
 
     selectNextShip() {
         this.#selectedShip = this.ships.concat(this.ships).findIndex((ship, i) => {
-            return i > this.#selectedShip && ship.status != 1
+            return i > this.#selectedShip && ship.status == 0
         }) % this.ships.length;
         // if (++this.#selectedShip >= this.ships.length) { this.#selectedShip = 0 };
         return this.ships[this.#selectedShip];
@@ -172,7 +182,7 @@ class Game {
     }
 
     getStandingPlayers() {
-        return this.#players.filter(player => player.ships.some(ship => ship.status != 1))
+        return this.#players.filter(player => player.ships.some(ship => ship.status == 0))
     }
 
     switchPlayer() {
