@@ -69,7 +69,6 @@ class Ship {
 
     decreaseHeat() {
         this.heat = Math.max(0, this.heat - 1);
-
     }
 }
 

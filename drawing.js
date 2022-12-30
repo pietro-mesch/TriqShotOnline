@@ -88,11 +88,30 @@ class gameViewLayer {
         this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
         this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
         this.context2d.fill();
+        this.drawHeatIndicators(ship);
         switch (ship.status) {
             case 0: break;
             case 1:
                 this.crossoutShip(ship);
             default: break;
+        }
+    }
+
+    drawHeatIndicators(ship) {
+        if (ship.heat > 0) {
+            let x = ship.position.x;
+            let y = ship.position.y;
+            let d = 0.5;
+            for (let i = 1; i <= ship.heat; i++) {
+                let r = ship.radius * (1 + i * d);
+                this.context2d.beginPath();
+                this.context2d.moveTo(x, y - 2 * r);
+                this.context2d.lineTo(x + r * Math.sqrt(3), y + r);
+                this.context2d.lineTo(x - r * Math.sqrt(3), y + r);
+                this.context2d.closePath();
+                this.context2d.stroke();
+            }
+
         }
     }
 
