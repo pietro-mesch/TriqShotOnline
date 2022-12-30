@@ -93,8 +93,10 @@ class gameViewLayer {
             case 0: break;
             case 1:
                 this.crossoutShip(ship);
+                break;
             case 2:
                 this.immolateShip(ship);
+                break;
             default: break;
         }
     }

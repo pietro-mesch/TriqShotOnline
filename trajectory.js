@@ -66,6 +66,7 @@ class Shot {
         if (hitShip == firingShip ? this.#fired : hitShip != null) {
             hitConfirmed = true;
             hitShip.status = 1;
+            hitShip.heat = 0;
             this.status = 1;
         }
         return hitConfirmed;

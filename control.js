@@ -8,6 +8,15 @@ async function fire() {
     }
 }
 
+async function skipTurn() {
+    if (fci != null) {
+        fci.skip();
+        GameView.hideFCI();
+        currentGame.endTurn();
+        GameView.redraw();
+    }
+}
+
 function clearFireControl() {
     fci = null;
 }
@@ -64,6 +73,11 @@ function keyDown(keyDownEvent) {
         //spacebar
         case 32:
             fire();
+            break;
+
+        // T
+        case 84:
+            skipTurn();
             break;
 
         //tab
@@ -166,6 +180,10 @@ class FireControlInterface {
         }
         this.ship.player.ships.filter(s => (!(s == this.ship) && s.status == 0)).forEach(s => s.decreaseHeat());
         return this.getCurrentShot();
+    }
+
+    skip() {
+        this.ship.player.ships.forEach(s => s.decreaseHeat());
     }
 
     getCurrentShot() {
