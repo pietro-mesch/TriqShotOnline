@@ -159,6 +159,8 @@ class FireControlInterface {
 
     fire(){
         this.ship.lastFiringVector = fci.getCurrentFiringVector();
+        this.ship.increaseHeat();
+        this.ship.player.ships.filter(s => (!(s == this.ship) && s.status == 0)).forEach(s => s.decreaseHeat());
         return this.getCurrentShot();
     }
 

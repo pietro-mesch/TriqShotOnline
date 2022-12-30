@@ -36,15 +36,22 @@ class Ship {
     player;
     lastFiringVector;
     status;
-    risk;
+    heat;
     radius;
     constructor(position, player) {
         this.position = position;
         this.player = player;
         this.lastFiringVector = null;
         this.status = 0;
-        this.risk=0;
+        this.heat = 0;
         this.radius = 5;
+    }
+    statusString() {
+        switch (this.status) {
+            case 0: return "OK";
+            case 1: return "DESTROYED";
+            default: break;
+        }
     }
 
     getLastShot(shots) {
@@ -56,12 +63,13 @@ class Ship {
         return null;
     }
 
-    statusString() {
-        switch (this.status) {
-            case 0: return "OK";
-            case 1: return "DESTROYED";
-            default: break;
-        }
+    increaseHeat() {
+        this.heat = Math.min(4, this.heat + 1);
+    }
+
+    decreaseHeat() {
+        this.heat = Math.max(0, this.heat - 1);
+
     }
 }
 
@@ -195,7 +203,7 @@ class Game {
         GameView.drawShips(this);
     }
 
-    static shipPositionOk(position, ships, planets){
+    static shipPositionOk(position, ships, planets) {
         return (
             !planets.some(p => dist(p.x, p.y, position.x, position.y) < p.radius) &&
             !ships.some(s => dist(s.position.x, s.position.y, position.x, position.y) < SHIP_GAP)
