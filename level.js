@@ -18,11 +18,12 @@ class Level {
         this.planets = this.generatePlanets(numPlanets);
     }
 
-    generatePlanets(numPlanets){
+    generatePlanets(numPlanets) {
         var planets = [];
         var p = null;
         for (let i = 0; i < numPlanets; i++) {
-            while (!this.planetOk(p,planets)) {
+            p = new Planet(GameView.getPlanetBox().randomPoint());
+            while (!this.planetOk(p, planets)) {
                 p = new Planet(GameView.getPlanetBox().randomPoint());
             }
             planets.push(p);
@@ -30,13 +31,13 @@ class Level {
         return planets;
     }
 
-    planetOk(p1,pp){
+    planetOk(p1, pp) {
         var check = true;
         if (p1 == null) {
             check = false;
         } else {
             pp.forEach(p2 => {
-                if (this.planetsTouch(p1,p2)){
+                if (this.planetsTouch(p1, p2)) {
                     check = false;
                 };
             });
@@ -45,7 +46,6 @@ class Level {
     }
 
     planetsTouch(p1, p2) {
-        var dist = Math.sqrt((p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2);
-        return dist < (p1.radius + p2.radius) * PLANET_GAP;
+        return dist(p1.x, p1.y, p2.x, p2.y) < (p1.radius + p2.radius) * PLANET_GAP;
     }
 }
