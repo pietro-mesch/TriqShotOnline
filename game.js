@@ -24,6 +24,7 @@ function newGame() {
     GameView.redraw();
     currentGame.deployShips();
     currentGame.switchPlayer();
+    switchFireControl();
 }
 
 function sleep(ms) {

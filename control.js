@@ -138,7 +138,7 @@ class FireControlInterface {
             this.a = ship.lastFiringVector.a;
             this.v = ship.lastFiringVector.v;
         } else {
-            this.a = Math.PI / 2;
+            this.a = angle(ship.position.x,ship.position.y,GameView.dimensions.width/2,GameView.dimensions.height/2);
             this.v = 0.4;
         };
         this.trackingMouse = false;
