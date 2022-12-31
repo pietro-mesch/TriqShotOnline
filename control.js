@@ -25,6 +25,7 @@ function switchFireControl() {
     if (currentGame != null) {
         fci = new FireControlInterface(currentGame.getActivePlayer().selectNextShip());
         GameView.drawFCI(fci);
+        //GameView.endGameMessage(fci.ship.player);
     }
 }
 

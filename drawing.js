@@ -237,6 +237,14 @@ class gameViewLayer {
         this.context2d.lineTo(x, y + r);
         this.context2d.stroke();
     }
+
+    endGameMessage(winner) {
+        this.context2d.fillStyle = G.alphaColour(winner.colour, 0.7);
+        this.context2d.textBaseline = "middle";
+        this.context2d.textAlign = "center";
+        this.context2d.font = "bold 36px block-font";
+        this.context2d.fillText(winner.name + " WINS!", GameView.dimensions.width / 2, GameView.dimensions.height / 2);
+    }
 }
 
 class GameView {
@@ -448,19 +456,23 @@ class GameView {
     static hideFCI() {
         if (fci != null) {
             fci = null;
-            this.controlLayer.clear();
+            GameView.clearControlLayer();
         }
     }
 
     static drawFCI(fci) {
         if (fci != null) {
-            this.controlLayer.clear();
+            GameView.clearControlLayer();
             this.controlLayer.drawFCI(fci);
         }
     }
 
     static clearControlLayer() {
         this.controlLayer.clear();
+    }
+
+    static endGameMessage(winner) {
+        this.controlLayer.endGameMessage(winner);
     }
 }
 
