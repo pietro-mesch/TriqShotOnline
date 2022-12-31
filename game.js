@@ -194,6 +194,7 @@ class Game {
         this.#playerOrderIndex = -1;
         clearFireControl();
         GameView.clearControlLayer();
+        GameView.endGameMessage(winner);
         console.log(winner.name + " WINS!");
     }
 
